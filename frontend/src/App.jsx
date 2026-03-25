@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
 
 // Layouts & common
 import Navbar from './components/common/Navbar';
@@ -85,7 +86,9 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <AppRoutes />
+        <WishlistProvider>
+          <AppRoutes />
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   );

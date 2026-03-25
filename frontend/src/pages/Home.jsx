@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, Truck, RefreshCw, Headphones } from 'lucide-react';
 import { productAPI } from '../services/api';
 import ProductCard from '../components/products/ProductCard';
-import Loading from '../components/common/Loading';
+import ProductSkeleton from '../components/products/ProductSkeleton';
+import HeroBanner from '../components/common/HeroBanner';
 
 const features = [
   { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹500' },
@@ -25,25 +26,8 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Shop the Best Products <br className="hidden md:block" />at Amazing Prices
-          </h1>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-            Discover thousands of products across all categories. Fast delivery, easy returns, and secure payments.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="/products" className="bg-white text-blue-700 font-semibold px-8 py-3 rounded-xl hover:bg-blue-50 transition-colors inline-flex items-center gap-2">
-              Shop Now <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/register" className="border border-white text-white font-semibold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors">
-              Sign Up Free
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Hero Slider */}
+      <HeroBanner />
 
       {/* Features */}
       <section className="py-12 px-4 bg-white border-b border-gray-100">
@@ -75,7 +59,9 @@ export default function Home() {
             </Link>
           </div>
           {loading ? (
-            <Loading fullScreen={false} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              <ProductSkeleton count={8} />
+            </div>
           ) : featured.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {featured.map((product) => <ProductCard key={product._id} product={product} />)}

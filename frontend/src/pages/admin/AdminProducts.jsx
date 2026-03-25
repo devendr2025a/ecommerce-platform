@@ -5,7 +5,22 @@ import Loading from '../../components/common/Loading';
 import toast from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
-const CATEGORIES = ['Electronics', 'Clothing', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys', 'Automotive', 'Grocery', 'Other'];
+const CATEGORIES = [
+  "Women's Wear",
+  "Men's Wear",
+  "Kids' Wear",
+  'Ethnic Wear',
+  'Western Wear',
+  'Footwear',
+  'Accessories',
+  'Bags & Handbags',
+  'Jewellery',
+  'Activewear',
+  'Innerwear & Sleepwear',
+  'Winter Wear',
+  'Sarees',
+  'Kurtas & Suits',
+];
 const EMPTY_FORM = { name: '', description: '', price: '', discount: '0', category: '', stock: '', isActive: true };
 
 export default function AdminProducts() {

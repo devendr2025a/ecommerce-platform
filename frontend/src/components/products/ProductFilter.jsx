@@ -1,7 +1,22 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 
-const CATEGORIES = ['Electronics', 'Clothing', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys', 'Automotive', 'Grocery', 'Other'];
+const CATEGORIES = [
+  "Women's Wear",
+  "Men's Wear",
+  "Kids' Wear",
+  'Ethnic Wear',
+  'Western Wear',
+  'Footwear',
+  'Accessories',
+  'Bags & Handbags',
+  'Jewellery',
+  'Activewear',
+  'Innerwear & Sleepwear',
+  'Winter Wear',
+  'Sarees',
+  'Kurtas & Suits',
+];
 
 export default function ProductFilter({ filters, onChange, onReset }) {
   const handleChange = (key, value) => onChange({ ...filters, [key]: value, page: 1 });
