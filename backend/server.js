@@ -62,6 +62,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'ShopEasy API is running', env: process.env.NODE_ENV });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'ShopEasy API is live!', docs: '/api/health' });
+});
+
 // 404 handler for unmatched routes
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
