@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Plus, CreditCard, CheckCircle } from 'lucide-react';
+import { Plus, CreditCard, CheckCircle, ShoppingBag } from 'lucide-react';
 import { addressAPI, paymentAPI, orderAPI } from '../services/api';
 import { useCart } from '../context/CartContext';
 import Loading from '../components/common/Loading';
@@ -11,6 +11,7 @@ export default function Checkout() {
   const { cart, clearCart } = useCart();
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('Online');
   const [loading, setLoading] = useState(true);
   const [placing, setPlacing] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -64,6 +65,30 @@ export default function Checkout() {
     if (!addr) return;
 
     setPlacing(true);
+
+    const shippingAddress = {
+      fullName: addr.fullName, phone: addr.phone,
+      addressLine1: addr.addressLine1, addressLine2: addr.addressLine2,
+      city: addr.city, state: addr.state, pincode: addr.pincode, country: addr.country,
+    };
+
+    if (paymentMethod === 'COD') {
+      try {
+        const { data: orderData } = await orderAPI.create({
+          shippingAddress,
+          paymentMethod: 'COD',
+        });
+        await clearCart();
+        toast.success('Order placed successfully (COD)!');
+        navigate(`/orders/${orderData.order._id}`);
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to place COD order');
+        setPlacing(false);
+      }
+      return;
+    }
+
+    // Online Payment (Razorpay)
     try {
       const loaded = await loadRazorpay();
       if (!loaded) { toast.error('Payment gateway failed to load'); setPlacing(false); return; }
@@ -85,14 +110,9 @@ export default function Checkout() {
               razorpay_signature: response.razorpay_signature,
             });
 
-            const shippingAddress = {
-              fullName: addr.fullName, phone: addr.phone,
-              addressLine1: addr.addressLine1, addressLine2: addr.addressLine2,
-              city: addr.city, state: addr.state, pincode: addr.pincode, country: addr.country,
-            };
-
             const { data: orderData } = await orderAPI.create({
               shippingAddress,
+              paymentMethod: 'Online',
               paymentInfo: verifyData.paymentInfo,
             });
 
@@ -104,7 +124,7 @@ export default function Checkout() {
           }
         },
         prefill: { name: addr.fullName, contact: addr.phone },
-        theme: { color: '#2563eb' },
+        theme: { color: '#000000' },
         modal: { ondismiss: () => setPlacing(false) },
       };
 
@@ -120,99 +140,147 @@ export default function Checkout() {
   if (loading) return <Loading />;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Checkout</h1>
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      <div className="flex flex-col gap-2 mb-12">
+        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">Secure Checkout</h1>
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Review and place your order</p>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left */}
-        <div className="lg:col-span-2 space-y-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Left: Shipping and Items */}
+        <div className="lg:col-span-7 space-y-12">
           {/* Delivery Address */}
-          <div className="card p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-gray-900 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-blue-600" /> Delivery Address
-              </h2>
-              <button onClick={() => setShowAddForm(!showAddForm)} className="text-sm text-blue-600 hover:underline flex items-center gap-1">
-                <Plus className="h-4 w-4" /> Add New
+          <div className="space-y-6">
+            <div className="flex items-center justify-between border-b border-gray-900 pb-4">
+              <h2 className="text-xs font-black text-white uppercase tracking-[0.3em]">1. Shipping Address</h2>
+              <button onClick={() => setShowAddForm(!showAddForm)} className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+                <Plus className="h-3 w-3" /> Add New
               </button>
             </div>
 
-            {addresses.map((addr) => (
-              <label key={addr._id} className={`flex gap-3 p-3 rounded-lg border-2 cursor-pointer mb-2 transition-colors ${selectedAddress === addr._id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                <input type="radio" name="address" value={addr._id} checked={selectedAddress === addr._id}
-                  onChange={() => setSelectedAddress(addr._id)} className="mt-1 accent-blue-600" />
-                <div className="text-sm">
-                  <p className="font-semibold text-gray-800">{addr.fullName} {addr.isDefault && <span className="badge bg-blue-100 text-blue-700 ml-1">Default</span>}</p>
-                  <p className="text-gray-600">{addr.phone}</p>
-                  <p className="text-gray-600">{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}</p>
-                  <p className="text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
-                </div>
-              </label>
-            ))}
+            <div className="space-y-4">
+              {addresses.map((addr) => (
+                <label key={addr._id} className={`flex gap-4 p-6 border transition-all cursor-pointer ${selectedAddress === addr._id ? 'bg-[#050505] border-white' : 'bg-black border-gray-900 hover:border-gray-700'}`}>
+                  <div className="flex-shrink-0 mt-1">
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${selectedAddress === addr._id ? 'border-white' : 'border-gray-800'}`}>
+                      {selectedAddress === addr._id && <div className="w-2 h-2 bg-white rounded-full" />}
+                    </div>
+                  </div>
+                  <input type="radio" name="address" value={addr._id} checked={selectedAddress === addr._id} onChange={() => setSelectedAddress(addr._id)} className="hidden" />
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-black text-white uppercase tracking-widest">{addr.fullName}</p>
+                      {addr.isDefault && <span className="text-[8px] font-black bg-white text-black px-1.5 py-0.5 uppercase tracking-tighter">Default</span>}
+                    </div>
+                    <p className="text-[11px] text-gray-400 uppercase tracking-widest font-bold font-mono">{addr.phone}</p>
+                    <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                      {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}<br />
+                      {addr.city}, {addr.state} - {addr.pincode}
+                    </p>
+                  </div>
+                </label>
+              ))}
+            </div>
 
             {showAddForm && (
-              <form onSubmit={handleAddAddress} className="mt-4 border-t border-gray-100 pt-4 grid grid-cols-2 gap-3">
-                <input required placeholder="Full Name" value={newAddress.fullName} onChange={(e) => setNewAddress({ ...newAddress, fullName: e.target.value })} className="input-field text-sm col-span-2" />
-                <input required placeholder="Phone (10 digits)" value={newAddress.phone} onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })} className="input-field text-sm col-span-2" maxLength={10} />
-                <input required placeholder="Address Line 1" value={newAddress.addressLine1} onChange={(e) => setNewAddress({ ...newAddress, addressLine1: e.target.value })} className="input-field text-sm col-span-2" />
-                <input placeholder="Address Line 2 (optional)" value={newAddress.addressLine2} onChange={(e) => setNewAddress({ ...newAddress, addressLine2: e.target.value })} className="input-field text-sm col-span-2" />
-                <input required placeholder="City" value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} className="input-field text-sm" />
-                <input required placeholder="State" value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} className="input-field text-sm" />
-                <input required placeholder="Pincode" value={newAddress.pincode} onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })} className="input-field text-sm" maxLength={6} />
-                <div className="flex items-center gap-2 col-span-2">
-                  <input type="checkbox" id="defaultAddr" checked={newAddress.isDefault} onChange={(e) => setNewAddress({ ...newAddress, isDefault: e.target.checked })} className="accent-blue-600" />
-                  <label htmlFor="defaultAddr" className="text-sm text-gray-700">Set as default address</label>
+              <form onSubmit={handleAddAddress} className="bg-[#050505] border border-gray-900 p-8 space-y-4 mt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <input required placeholder="FULL NAME" value={newAddress.fullName} onChange={(e) => setNewAddress({ ...newAddress, fullName: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
+                  <input required placeholder="PHONE NUMBER" value={newAddress.phone} onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase font-mono" maxLength={10} />
+                  <input required placeholder="ADDRESS LINE 1" value={newAddress.addressLine1} onChange={(e) => setNewAddress({ ...newAddress, addressLine1: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
+                  <input placeholder="ADDRESS LINE 2 (OPTIONAL)" value={newAddress.addressLine2} onChange={(e) => setNewAddress({ ...newAddress, addressLine2: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
+                  <input required placeholder="CITY" value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase" />
+                  <input required placeholder="STATE" value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase" />
+                  <input required placeholder="PINCODE" value={newAddress.pincode} onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase font-mono" maxLength={6} />
+                  <div className="flex items-center gap-3 col-span-2 pt-2">
+                    <input type="checkbox" id="defaultAddr" checked={newAddress.isDefault} onChange={(e) => setNewAddress({ ...newAddress, isDefault: e.target.checked })} className="w-4 h-4 bg-black border-gray-800 rounded-sm focus:ring-0 accent-white" />
+                    <label htmlFor="defaultAddr" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Set as default address</label>
+                  </div>
                 </div>
-                <div className="col-span-2 flex gap-2">
-                  <button type="submit" className="btn-primary text-sm py-2 flex-1">Save Address</button>
-                  <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary text-sm py-2">Cancel</button>
+                <div className="flex gap-4 pt-6">
+                  <button type="submit" className="btn-primary flex-1">Save Address</button>
+                  <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary">Cancel</button>
                 </div>
               </form>
             )}
           </div>
 
           {/* Order Items */}
-          <div className="card p-5">
-            <h2 className="font-bold text-gray-900 mb-4">Order Items ({items.length})</h2>
-            <div className="space-y-3">
+          <div className="space-y-6">
+            <div className="border-b border-gray-900 pb-4">
+              <h2 className="text-xs font-black text-white uppercase tracking-[0.3em]">2. Review Items</h2>
+            </div>
+            <div className="space-y-4">
               {items.map((item) => (
-                <div key={item._id} className="flex items-center gap-3 text-sm">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div key={item._id} className="flex gap-6 items-center p-4 border border-gray-900 bg-[#020202]">
+                  <div className="w-16 h-16 bg-gray-950 border border-gray-900 overflow-hidden flex-shrink-0">
                     {item.product?.images?.[0]?.url && (
                       <img src={item.product.images[0].url.startsWith('http') ? item.product.images[0].url : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.product.images[0].url}`} alt="" className="w-full h-full object-cover" />
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-800 line-clamp-1">{item.product?.name}</p>
-                    <p className="text-gray-500">Qty: {item.quantity}</p>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-[11px] font-black text-white uppercase tracking-widest line-clamp-1">{item.product?.name}</p>
+                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Quantity: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold text-gray-900">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                  <p className="text-[11px] font-black text-white uppercase tracking-tighter">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Right - Summary */}
-        <div>
-          <div className="card p-5 sticky top-20">
-            <h2 className="font-bold text-gray-900 text-lg mb-4">Price Details</h2>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span></div>
-              <div className="flex justify-between text-gray-600"><span>Shipping</span><span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>{shipping === 0 ? 'FREE' : `₹${shipping}`}</span></div>
-              <div className="flex justify-between text-gray-600"><span>GST (18%)</span><span>₹{tax.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span></div>
-              <div className="border-t border-gray-100 pt-2 flex justify-between font-bold text-gray-900 text-base">
-                <span>Total</span><span>₹{total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+        {/* Right: Payment and Summary */}
+        <div className="lg:col-span-5">
+          <div className="bg-[#050505] border border-gray-900 p-8 space-y-10 sticky top-28">
+            <div className="space-y-6">
+              <h2 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Payment Method</h2>
+              <div className="space-y-3">
+                <label className={`flex items-center gap-4 p-5 border cursor-pointer transition-all ${paymentMethod === 'Online' ? 'bg-[#080808] border-white' : 'bg-black border-gray-900 hover:border-gray-800'}`}>
+                  <input type="radio" name="payment" value="Online" checked={paymentMethod === 'Online'} onChange={() => setPaymentMethod('Online')} className="hidden" />
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${paymentMethod === 'Online' ? 'border-white' : 'border-gray-800'}`}>
+                    {paymentMethod === 'Online' && <div className="w-2 h-2 bg-white rounded-full" />}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] font-black text-white uppercase tracking-widest">Card / NetBanking</p>
+                    <p className="text-[9px] text-gray-600 font-bold uppercase tracking-widest mt-0.5">Secure Transaction</p>
+                  </div>
+                  <CreditCard className={`h-5 w-5 ${paymentMethod === 'Online' ? 'text-white' : 'text-gray-700'}`} />
+                </label>
+
+                <label className={`flex items-center gap-4 p-5 border cursor-pointer transition-all ${paymentMethod === 'COD' ? 'bg-[#080808] border-white' : 'bg-black border-gray-900 hover:border-gray-800'}`}>
+                  <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="hidden" />
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${paymentMethod === 'COD' ? 'border-white' : 'border-gray-800'}`}>
+                    {paymentMethod === 'COD' && <div className="w-2 h-2 bg-white rounded-full" />}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] font-black text-white uppercase tracking-widest">Cash on Delivery</p>
+                    <p className="text-[9px] text-gray-600 font-bold uppercase tracking-widest mt-0.5">Pay at Doorstep</p>
+                  </div>
+                  <CheckCircle className={`h-5 w-5 ${paymentMethod === 'COD' ? 'text-white' : 'text-gray-700'}`} />
+                </label>
               </div>
             </div>
-            <button onClick={handlePlaceOrder} disabled={placing || !selectedAddress}
-              className="btn-primary w-full mt-5 py-3 flex items-center justify-center gap-2 text-base">
-              <CreditCard className="h-5 w-5" />
-              {placing ? 'Processing...' : 'Pay with Razorpay'}
-            </button>
-            <div className="flex items-center gap-2 mt-3 text-xs text-gray-400 justify-center">
-              <CheckCircle className="h-4 w-4 text-green-500" /> Secured by Razorpay
+
+            <div className="space-y-6">
+              <h2 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Price Summary</h2>
+              <div className="space-y-4 text-[11px] font-bold uppercase tracking-widest">
+                <div className="flex justify-between text-gray-400"><span>Subtotal</span><span className="text-white tracking-tighter">₹{subtotal.toLocaleString('en-IN')}</span></div>
+                <div className="flex justify-between text-gray-400"><span>Shipping</span><span className="text-white uppercase">{shipping === 0 ? 'COMPLIMENTARY' : `₹${shipping}`}</span></div>
+                <div className="flex justify-between text-gray-400"><span>GST (18%)</span><span className="text-white tracking-tighter">₹{tax.toLocaleString('en-IN')}</span></div>
+                <div className="h-px bg-gray-900 my-4" />
+                <div className="flex justify-between text-white text-sm font-black italic">
+                  <span>Grand Total</span><span className="tracking-tighter">₹{total.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
             </div>
+
+            <button onClick={handlePlaceOrder} disabled={placing || !selectedAddress} className="btn-primary w-full py-4 text-xs tracking-[0.3em]">
+              {placing ? 'PROCESSSING...' : (paymentMethod === 'Online' ? 'PAY & PLACE ORDER' : 'CONFIRM COD ORDER')}
+            </button>
+            
+            <p className="text-[9px] text-gray-700 font-black uppercase tracking-widest text-center italic">
+              All transactions are secured and encrypted.
+            </p>
           </div>
         </div>
       </div>

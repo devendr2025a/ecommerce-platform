@@ -7,7 +7,7 @@ const Product = require('../models/Product');
 // @access  Private
 const createOrder = async (req, res, next) => {
   try {
-    const { shippingAddress, paymentInfo } = req.body;
+    const { shippingAddress, paymentInfo, paymentMethod } = req.body;
 
     const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
     if (!cart || cart.items.length === 0) {
@@ -48,10 +48,11 @@ const createOrder = async (req, res, next) => {
       shippingPrice,
       taxPrice,
       totalPrice,
-      paymentStatus: paymentInfo ? 'Paid' : 'Pending',
+      paymentMethod: paymentMethod || 'Online',
+      paymentStatus: paymentMethod === 'COD' ? 'Pending' : (paymentInfo ? 'Paid' : 'Pending'),
       paymentInfo: paymentInfo || {},
       orderStatus: 'Processing',
-      paidAt: paymentInfo ? new Date() : null,
+      paidAt: (paymentMethod !== 'COD' && paymentInfo) ? new Date() : null,
     });
 
     // Decrease stock

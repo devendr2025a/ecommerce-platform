@@ -58,28 +58,28 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-500 hover:text-gray-800 mb-6 text-sm">
-        <ArrowLeft className="h-4 w-4" /> Back
+    <div className="max-w-7xl mx-auto px-4 py-16">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-600 hover:text-white mb-12 text-[10px] font-black uppercase tracking-[0.2em] transition-colors">
+        <ArrowLeft className="h-3 w-3" /> Back
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Images */}
-        <div className="space-y-3">
-          <div className="card overflow-hidden aspect-square bg-gray-100">
+        <div className="space-y-6">
+          <div className="bg-[#020202] border border-gray-900 aspect-square overflow-hidden">
             {product.images?.length > 0 ? (
               <img src={getImageUrl(product.images[selectedImage]?.url)} alt={product.name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-300">
-                <Package className="h-24 w-24" />
+              <div className="w-full h-full flex items-center justify-center text-gray-800">
+                <Package className="h-20 w-20 stroke-[1]" />
               </div>
             )}
           </div>
           {product.images?.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
               {product.images.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === i ? 'border-blue-600' : 'border-gray-200'}`}>
+                  className={`flex-shrink-0 w-20 h-20 border transition-all ${selectedImage === i ? 'border-white' : 'border-gray-900 hover:border-gray-700'}`}>
                   <img src={getImageUrl(img.url)} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
@@ -88,52 +88,60 @@ export default function ProductDetail() {
         </div>
 
         {/* Info */}
-        <div className="space-y-5">
-          <div>
-            <span className="text-sm font-medium text-blue-600">{product.category}</span>
-            <h1 className="text-2xl font-bold text-gray-900 mt-1">{product.name}</h1>
+        <div className="space-y-10">
+          <div className="space-y-4">
+            <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">{product.category}</span>
+            <h1 className="text-4xl font-black text-white uppercase tracking-tighter italic leading-tight">{product.name}</h1>
+            
             {product.numReviews > 0 && (
-              <div className="flex items-center gap-2 mt-2">
-                <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-4 mt-4">
+                <div className="flex items-center gap-1">
                   {[1,2,3,4,5].map((s) => (
-                    <Star key={s} className={`h-4 w-4 ${s <= Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                    <Star key={s} className={`h-3 w-3 ${s <= Math.round(product.rating) ? 'fill-white text-white' : 'text-gray-800'}`} />
                   ))}
                 </div>
-                <span className="text-sm text-gray-500">{product.rating?.toFixed(1)} ({product.numReviews} reviews)</span>
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{product.rating?.toFixed(1)} / {product.numReviews} Reviews</span>
               </div>
             )}
           </div>
 
-          <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-gray-900">₹{discountedPrice.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+          <div className="flex items-baseline gap-4 py-8 border-y border-gray-900">
+            <span className="text-4xl font-black text-white tracking-tighter">₹{discountedPrice.toLocaleString('en-IN')}</span>
             {product.discount > 0 && (
-              <>
-                <span className="text-lg text-gray-400 line-through">₹{product.price.toLocaleString('en-IN')}</span>
-                <span className="badge bg-red-100 text-red-700 font-semibold">{product.discount}% OFF</span>
-              </>
+              <div className="flex items-center gap-3">
+                <span className="text-lg text-gray-600 line-through tracking-tight">₹{product.price.toLocaleString('en-IN')}</span>
+                <span className="text-[10px] font-black bg-white text-black px-2 py-0.5 uppercase tracking-tighter">-{product.discount}%</span>
+              </div>
             )}
           </div>
 
-          <p className="text-gray-600 leading-relaxed">{product.description}</p>
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Description</h3>
+            <p className="text-gray-500 text-sm leading-relaxed uppercase tracking-wide font-medium">
+                {product.description}
+            </p>
+          </div>
 
-          <div className={`flex items-center gap-2 text-sm font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-            <div className={`w-2 h-2 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`} />
-            {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? 'bg-white' : 'bg-red-900'}`} />
+            <span className={`text-[10px] font-black uppercase tracking-widest ${product.stock > 0 ? 'text-gray-400' : 'text-red-900'}`}>
+                {product.stock > 0 ? `${product.stock} units available` : 'Sold out'}
+            </span>
           </div>
 
           {product.stock > 0 && (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-2 hover:bg-gray-50 transition-colors">
-                  <Minus className="h-4 w-4" />
+            <div className="flex flex-col sm:flex-row items-center gap-6 pt-6">
+              <div className="flex items-center border border-gray-900 bg-black w-full sm:w-auto">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-4 hover:bg-gray-900 transition-colors disabled:opacity-20">
+                  <Minus className="h-4 w-4 text-white" />
                 </button>
-                <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">{quantity}</span>
-                <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="px-3 py-2 hover:bg-gray-50 transition-colors">
-                  <Plus className="h-4 w-4" />
+                <span className="px-6 py-2 text-sm font-black text-white min-w-[4rem] text-center tracking-tighter">{quantity}</span>
+                <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="p-4 hover:bg-gray-900 transition-colors disabled:opacity-20">
+                  <Plus className="h-4 w-4 text-white" />
                 </button>
               </div>
-              <button onClick={handleAddToCart} className="btn-primary flex items-center gap-2 flex-1 justify-center py-2.5">
-                <ShoppingCart className="h-5 w-5" /> Add to Cart
+              <button onClick={handleAddToCart} className="btn-primary w-full py-4 text-xs tracking-[0.3em] flex-1">
+                ADD TO BAG
               </button>
             </div>
           )}
@@ -141,50 +149,60 @@ export default function ProductDetail() {
       </div>
 
       {/* Reviews */}
-      <div className="mt-14">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="mt-32 border-t border-gray-900 pt-20">
+        <div className="flex flex-col gap-2 mb-12">
+            <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">Client Testimonials</h2>
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Verified purchasers share their experience</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           {/* Review list */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-7 space-y-6">
             {product.reviews?.length > 0 ? product.reviews.map((r) => (
-              <div key={r._id} className="card p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex">
+              <div key={r._id} className="bg-[#020202] border border-gray-900 p-8 space-y-4 hover:border-white/10 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
                     {[1,2,3,4,5].map((s) => (
-                      <Star key={s} className={`h-3.5 w-3.5 ${s <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                      <Star key={s} className={`h-2.5 w-2.5 ${s <= r.rating ? 'fill-white text-white' : 'text-gray-800'}`} />
                     ))}
                   </div>
-                  <span className="font-medium text-sm text-gray-800">{r.name}</span>
-                  <span className="text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
+                  <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">{new Date(r.createdAt).toLocaleDateString()}</span>
                 </div>
-                <p className="text-gray-600 text-sm">{r.comment}</p>
+                <div className="space-y-1">
+                    <p className="text-[11px] font-black text-white uppercase tracking-widest">{r.name}</p>
+                    <p className="text-gray-500 text-[11px] font-bold uppercase tracking-widest leading-relaxed italic">"{r.comment}"</p>
+                </div>
               </div>
-            )) : <p className="text-gray-500 text-sm">No reviews yet. Be the first!</p>}
+            )) : (
+                <div className="bg-[#050505] border border-dashed border-gray-900 p-12 text-center">
+                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">No feedback available yet</p>
+                </div>
+            )}
           </div>
 
           {/* Write review */}
           {user && (
-            <div className="card p-5">
-              <h3 className="font-semibold text-gray-800 mb-4">Write a Review</h3>
-              <form onSubmit={handleSubmitReview} className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                  <div className="flex gap-1">
+            <div className="lg:col-span-5 bg-[#050505] border border-gray-900 p-10 h-fit sticky top-28">
+              <h3 className="text-xs font-black text-white uppercase tracking-[0.3em] mb-8">Share Feedback</h3>
+              <form onSubmit={handleSubmitReview} className="space-y-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Overall Satisfaction</label>
+                  <div className="flex gap-2">
                     {[1,2,3,4,5].map((s) => (
                       <button key={s} type="button" onClick={() => setReview({ ...review, rating: s })}>
-                        <Star className={`h-6 w-6 cursor-pointer transition-colors ${s <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 hover:text-yellow-300'}`} />
+                        <Star className={`h-8 w-8 transition-all ${s <= review.rating ? 'fill-white text-white' : 'fill-none text-gray-800 hover:text-white'}`} />
                       </button>
                     ))}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Comment</label>
-                  <textarea required rows={3} placeholder="Share your experience..."
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Detailed Remarks</label>
+                  <textarea required rows={4} placeholder="TYPE YOUR THOUGHTS..."
                     value={review.comment} onChange={(e) => setReview({ ...review, comment: e.target.value })}
-                    className="input-field resize-none text-sm" />
+                    className="input-field resize-none text-[10px] font-bold tracking-widest uppercase" />
                 </div>
-                <button type="submit" disabled={reviewLoading} className="btn-primary w-full text-sm">
-                  {reviewLoading ? 'Submitting...' : 'Submit Review'}
+                <button type="submit" disabled={reviewLoading} className="btn-primary w-full py-4 tracking-[0.2em] text-[10px]">
+                  {reviewLoading ? 'PROCESSESING...' : 'PUBLISH REVIEW'}
                 </button>
               </form>
             </div>

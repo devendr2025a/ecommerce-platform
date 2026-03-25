@@ -22,66 +22,72 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <ShoppingBag className="h-20 w-20 text-gray-300 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
-        <p className="text-gray-500 mb-6">Looks like you haven't added anything yet.</p>
-        <Link to="/products" className="btn-primary inline-flex items-center gap-2">
-          Start Shopping <ArrowRight className="h-4 w-4" />
+      <div className="max-w-2xl mx-auto px-4 py-32 text-center">
+        <ShoppingBag className="h-20 w-20 text-gray-800 mx-auto mb-8 stroke-[1]" />
+        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4 italic">Empty Cart</h2>
+        <p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] mb-10 font-bold">Looks like you haven't added anything yet.</p>
+        <Link to="/products" className="btn-primary inline-flex">
+          Continue Shopping
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Shopping Cart ({items.length} items)</h1>
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      <div className="flex flex-col gap-2 mb-12">
+        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">Your Bag</h1>
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">{items.length} Items Total</p>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Cart Items */}
-        <div className="lg:col-span-2 space-y-3">
+        <div className="lg:col-span-2 space-y-4">
           {items.map((item) => {
             const product = item.product;
             if (!product) return null;
             const imgUrl = product.images?.[0]?.url ? getImageUrl(product.images[0].url) : null;
             return (
-              <div key={item._id} className="card p-4 flex gap-4">
-                <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+              <div key={item._id} className="bg-[#000000] border border-gray-900 p-6 flex gap-6 group hover:border-white/20 transition-all">
+                <div className="w-24 h-24 bg-gray-950 overflow-hidden flex-shrink-0 border border-gray-900">
                   {imgUrl ? (
-                    <img src={imgUrl} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={imgUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ShoppingBag className="h-8 w-8 text-gray-300" />
+                      <ShoppingBag className="h-8 w-8 text-gray-800 stroke-[1]" />
                     </div>
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <Link to={`/products/${product._id}`} className="font-semibold text-gray-800 hover:text-blue-600 line-clamp-1 text-sm">
-                    {product.name}
-                  </Link>
-                  <p className="text-blue-600 font-bold mt-1">₹{item.price.toLocaleString('en-IN')}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <div className="flex-1 min-w-0 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start gap-4">
+                        <Link to={`/products/${product._id}`} className="text-xs font-black text-white uppercase tracking-widest hover:text-gray-300 transition-colors">
+                            {product.name}
+                        </Link>
+                        <button onClick={() => removeFromCart(product._id)} className="text-gray-600 hover:text-white transition-colors">
+                            <Trash2 className="h-4 w-4" />
+                        </button>
+                    </div>
+                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1 mb-2">{product.category}</p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center border border-gray-900 bg-gray-950">
                       <button onClick={() => updateQuantity(product._id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
-                        className="px-2 py-1 hover:bg-gray-50 disabled:opacity-40 transition-colors">
-                        <Minus className="h-3.5 w-3.5" />
+                        className="p-2 hover:bg-gray-900 disabled:opacity-20 transition-colors">
+                        <Minus className="h-3 w-3" />
                       </button>
-                      <span className="px-3 py-1 text-sm font-semibold">{item.quantity}</span>
+                      <span className="px-4 py-1 text-[11px] font-black text-white">{item.quantity}</span>
                       <button onClick={() => updateQuantity(product._id, item.quantity + 1)}
                         disabled={item.quantity >= product.stock}
-                        className="px-2 py-1 hover:bg-gray-50 disabled:opacity-40 transition-colors">
-                        <Plus className="h-3.5 w-3.5" />
+                        className="p-2 hover:bg-gray-900 disabled:opacity-20 transition-colors">
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-gray-900 text-sm">
+                    <span className="font-black text-white text-sm tracking-tighter">
                         ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                      </span>
-                      <button onClick={() => removeFromCart(product._id)} className="text-red-400 hover:text-red-600 transition-colors">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -91,38 +97,39 @@ export default function Cart() {
 
         {/* Order Summary */}
         <div>
-          <div className="card p-5 sticky top-20">
-            <h2 className="font-bold text-gray-900 text-lg mb-4">Order Summary</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-gray-600">
-                <span>Subtotal ({items.length} items)</span>
-                <span>₹{subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+          <div className="bg-[#050505] border border-gray-900 p-8 sticky top-28">
+            <h2 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-8">Order Summary</h2>
+            <div className="space-y-6 text-[11px] font-bold uppercase tracking-widest">
+              <div className="flex justify-between text-gray-400">
+                <span>Subtotal</span>
+                <span className="text-white tracking-tighter text-xs">₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-gray-400">
                 <span>Shipping</span>
-                <span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping}`}
+                <span className={shipping === 0 ? 'text-white' : 'text-white tracking-tighter text-xs'}>
+                  {shipping === 0 ? 'COMPLIMENTARY' : `₹${shipping}`}
                 </span>
               </div>
-              <div className="flex justify-between text-gray-600">
-                <span>GST (18%)</span>
-                <span>₹{tax.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+              <div className="flex justify-between text-gray-400">
+                <span>Estimated Tax</span>
+                <span className="text-white tracking-tighter text-xs">₹{tax.toLocaleString('en-IN')}</span>
               </div>
-              <div className="border-t border-gray-100 pt-3 flex justify-between font-bold text-gray-900">
+              <div className="h-px bg-gray-900 my-6" />
+              <div className="flex justify-between text-white text-sm font-black italic">
                 <span>Total</span>
-                <span>₹{total.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <span className="tracking-tighter">₹{total.toLocaleString('en-IN')}</span>
               </div>
             </div>
             {shipping > 0 && (
-              <p className="text-xs text-gray-500 mt-3 bg-blue-50 p-2 rounded-lg">
-                Add ₹{(500 - subtotal).toFixed(0)} more for free shipping
+              <p className="text-[9px] text-gray-600 font-bold uppercase tracking-widest mt-8 text-center italic">
+                Spend ₹{(500 - subtotal).toFixed(0)} more for free shipping
               </p>
             )}
-            <button onClick={() => navigate('/checkout')} className="btn-primary w-full mt-4 py-3 flex items-center justify-center gap-2">
-              Proceed to Checkout <ArrowRight className="h-4 w-4" />
+            <button onClick={() => navigate('/checkout')} className="btn-primary w-full mt-10">
+              Checkout Now
             </button>
-            <Link to="/products" className="btn-secondary w-full mt-2 py-2.5 text-center block text-sm">
-              Continue Shopping
+            <Link to="/products" className="btn-secondary w-full mt-4 block">
+              Keep Shopping
             </Link>
           </div>
         </div>

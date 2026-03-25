@@ -6,20 +6,20 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 
 const CATEGORIES = [
-  { name: "Women's Wear",         emoji: '👗' },
-  { name: "Men's Wear",           emoji: '👔' },
-  { name: "Kids' Wear",           emoji: '🧒' },
-  { name: 'Ethnic Wear',          emoji: '🥻' },
-  { name: 'Western Wear',         emoji: '👖' },
-  { name: 'Footwear',             emoji: '👟' },
-  { name: 'Accessories',          emoji: '👜' },
-  { name: 'Bags & Handbags',      emoji: '👛' },
-  { name: 'Jewellery',            emoji: '💍' },
-  { name: 'Activewear',           emoji: '🏃' },
-  { name: 'Innerwear & Sleepwear',emoji: '🩲' },
-  { name: 'Winter Wear',          emoji: '🧥' },
-  { name: 'Sarees',               emoji: '🪭' },
-  { name: 'Kurtas & Suits',       emoji: '👘' },
+  { name: "Women's Wear", emoji: '👗' },
+  { name: "Men's Wear", emoji: '👔' },
+  { name: "Kids' Wear", emoji: '🧒' },
+  { name: 'Ethnic Wear', emoji: '🥻' },
+  { name: 'Western Wear', emoji: '👖' },
+  { name: 'Footwear', emoji: '👟' },
+  { name: 'Accessories', emoji: '👜' },
+  { name: 'Bags & Handbags', emoji: '👛' },
+  { name: 'Jewellery', emoji: '💍' },
+  { name: 'Activewear', emoji: '🏃' },
+  { name: 'Innerwear & Sleepwear', emoji: '🩲' },
+  { name: 'Winter Wear', emoji: '🧥' },
+  { name: 'Sarees', emoji: '🪭' },
+  { name: 'Kurtas & Suits', emoji: '👘' },
 ];
 
 export default function Navbar() {
@@ -29,25 +29,30 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [menuOpen, setMenuOpen]           = useState(false);
-  const [dropdownOpen, setDropdownOpen]   = useState(false);
-  const [catOpen, setCatOpen]             = useState(false);
-  const [searchQuery, setSearchQuery]     = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [catOpen, setCatOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const dropdownRef = useRef(null);
-  const catRef      = useRef(null);
+  const catRef = useRef(null);
 
-  // close dropdowns on outside click
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setDropdownOpen(false);
-      if (catRef.current      && !catRef.current.contains(e.target))      setCatOpen(false);
+      if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // close mobile menu on route change
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
   const handleLogout = async () => {
@@ -64,246 +69,149 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
-      {/* ── Top bar ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 h-16">
+    <div className="sticky top-0 z-50">
+      {/* ── Announcement Bar ── */}
+      <div className="bg-[#000000] text-white text-[10px] font-bold uppercase tracking-[0.3em] py-2 px-4 text-center border-b border-gray-900">
+        Free Shipping on all orders above ₹499
+      </div>
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 text-blue-600 font-bold text-xl flex-shrink-0">
-            <ShoppingBag className="h-6 w-6" />
-            <span className="hidden sm:inline">ShopEasy</span>
-          </Link>
-
-          {/* Search bar — desktop */}
-          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl">
-            <div className="flex w-full rounded-xl border border-gray-200 overflow-hidden focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-              <input
-                type="text"
-                placeholder="Search products, brands & more…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 px-4 py-2.5 text-sm outline-none bg-gray-50 text-gray-800 placeholder-gray-400"
-              />
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 transition-colors px-4 flex items-center justify-center flex-shrink-0">
-                <Search className="h-4 w-4 text-white" />
+      <nav className={`transition-all duration-300 ${isScrolled ? 'bg-[#000000]/95 backdrop-blur-md shadow-2xl py-2' : 'bg-[#000000] py-4'} border-b border-gray-900`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            
+            {/* Left: Mobile Menu Trigger & Categories Link */}
+            <div className="flex items-center gap-6 flex-1">
+              <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden text-white p-1">
+                {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
+              
+              <div className="hidden lg:flex items-center gap-8">
+                <Link to="/products" className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-300 hover:text-white transition-colors">Shop All</Link>
+                <div className="relative group" ref={catRef}>
+                  <button 
+                    onClick={() => setCatOpen(!catOpen)}
+                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-300 hover:text-white transition-colors flex items-center gap-1.5"
+                  >
+                    Collections <ChevronDown className={`h-3 w-3 transition-transform ${catOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {catOpen && (
+                    <div className="absolute left-0 top-full mt-4 w-[600px] bg-[#000000] border border-gray-800 shadow-2xl p-6 grid grid-cols-3 gap-6 rounded-sm">
+                      {CATEGORIES.slice(0, 15).map((cat) => (
+                        <Link 
+                          key={cat.name} 
+                          to={`/products?category=${encodeURIComponent(cat.name)}`}
+                          onClick={() => setCatOpen(false)}
+                          className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 hover:text-white transition-colors py-1"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Link to="/about" className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-300 hover:text-white transition-colors">About</Link>
+              </div>
             </div>
-          </form>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-1 sm:gap-2 ml-auto">
+            {/* Center: Brand Identity */}
+            <div className="flex-shrink-0 flex items-center justify-center">
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/assets/logo.png" alt="AVROTIDE" className="h-10 w-auto brightness-0 invert select-none" />
+              </Link>
+            </div>
 
-            {/* Wishlist */}
-            <Link to="/wishlist" className="relative p-2 text-gray-500 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50">
-              <Heart className="h-5 w-5" />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                  {wishlistCount > 9 ? '9+' : wishlistCount}
-                </span>
-              )}
-            </Link>
+            {/* Right: Actions */}
+            <div className="flex items-center justify-end gap-3 flex-1">
+              {/* Search Toggle (Desktop) */}
+              <div className="hidden md:block relative max-w-[180px]">
+                <form onSubmit={handleSearch}>
+                  <input 
+                    type="text" 
+                    placeholder="Search..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-[#111111] border border-gray-800 text-[11px] px-3 py-1.5 rounded-full w-full focus:outline-none focus:border-gray-500 text-white placeholder:text-gray-600"
+                  />
+                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500 pointer-events-none" />
+                </form>
+              </div>
 
-            {/* Cart */}
-            <Link to="/cart" className="relative p-2 text-gray-500 hover:text-blue-600 transition-colors rounded-xl hover:bg-blue-50">
-              <ShoppingCart className="h-5 w-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                  {cartCount > 9 ? '9+' : cartCount}
-                </span>
-              )}
-            </Link>
+              {/* Wishlist */}
+              <Link to="/wishlist" className="p-2 text-gray-400 hover:text-white transition-colors relative">
+                <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full border border-black animate-pulse" />}
+              </Link>
 
-            {/* User menu — desktop */}
-            {user ? (
-              <div className="relative hidden md:block" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-gray-700"
-                >
-                  <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="text-sm font-medium max-w-[80px] truncate">{user.name.split(' ')[0]}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+              {/* User Account */}
+              <div className="relative" ref={dropdownRef}>
+                <button onClick={() => setDropdownOpen(!dropdownOpen)} className="p-2 text-gray-400 hover:text-white transition-colors">
+                  <User className="h-5 w-5" />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-50 mb-1">
-                      <p className="text-sm font-semibold text-gray-800 truncate">{user.name}</p>
-                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
-                    </div>
-                    <Link to="/dashboard" onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                      <User className="h-4 w-4 text-gray-400" /> My Profile
-                    </Link>
-                    <Link to="/orders" onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                      <Package className="h-4 w-4 text-gray-400" /> My Orders
-                    </Link>
-                    <Link to="/wishlist" onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                      <Heart className="h-4 w-4 text-gray-400" /> Wishlist
-                    </Link>
-                    {isAdmin && (
-                      <Link to="/admin" onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 font-medium transition-colors">
-                        <LayoutDashboard className="h-4 w-4" /> Admin Panel
-                      </Link>
+                  <div className="absolute right-0 mt-4 w-56 bg-[#000000] border border-gray-800 shadow-2xl py-3 rounded-sm z-[100]">
+                    {user ? (
+                      <>
+                        <div className="px-4 py-3 border-b border-gray-900 mb-2">
+                          <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-0.5">Welcome</p>
+                          <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                        </div>
+                        <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-gray-900">Dashboard</Link>
+                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-gray-900">Orders</Link>
+                        {isAdmin && <Link to="/admin" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-blue-500 hover:text-blue-400 hover:bg-gray-900">Admin</Link>}
+                        <div className="h-px bg-gray-900 my-2" />
+                        <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-red-500 hover:text-red-400 hover:bg-gray-900">Sign Out</button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-gray-900">Sign In</Link>
+                        <Link to="/register" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-gray-900">Create Account</Link>
+                      </>
                     )}
-                    <hr className="my-1.5 border-gray-100" />
-                    <button onClick={handleLogout}
-                      className="flex items-center gap-2.5 px-4 py-2 text-sm text-red-500 hover:bg-red-50 w-full text-left transition-colors">
-                      <LogOut className="h-4 w-4" /> Sign Out
-                    </button>
                   </div>
                 )}
               </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-2">
-                <Link to="/login"    className="btn-secondary text-sm py-2 px-4">Login</Link>
-                <Link to="/register" className="btn-primary  text-sm py-2 px-4">Sign Up</Link>
-              </div>
-            )}
 
-            {/* Mobile hamburger */}
-            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-gray-600 rounded-xl hover:bg-gray-100 transition-colors">
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+              {/* Cart */}
+              <Link to="/cart" className="flex items-center gap-1.5 p-2 bg-[#111111] hover:bg-[#1a1a1a] border border-gray-800 rounded-full transition-all group px-3">
+                <ShoppingCart className="h-4 w-4 text-gray-100 group-hover:text-white" />
+                <span className="text-[10px] font-black text-white min-w-[12px] text-center">{cartCount}</span>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ── Category bar — desktop ── */}
-      <div className="hidden md:block border-t border-gray-100 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1.5">
-
-            {/* All Categories dropdown */}
-            <div className="relative flex-shrink-0" ref={catRef}>
-              <button
-                onClick={() => setCatOpen(!catOpen)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${catOpen ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
-              >
-                <Grid3X3 className="h-4 w-4" />
-                All Categories
-                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${catOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {catOpen && (
-                <div className="absolute left-0 top-full mt-1 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
-                  <Link to="/products" onClick={() => setCatOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-semibold">
-                    <span>🛍️</span> All Products
-                  </Link>
-                  <hr className="my-1 border-gray-100" />
+        {/* ── Mobile Search & Menu ── */}
+        {menuOpen && (
+          <div className="lg:hidden absolute top-full left-0 w-full bg-[#000000] border-t border-gray-900 h-screen overflow-y-auto px-6 py-8">
+            <form onSubmit={handleSearch} className="mb-10">
+              <div className="relative">
+                <input 
+                  type="text" 
+                  placeholder="SEARCH PRODUCTS..." 
+                  className="w-full bg-transparent border-b border-gray-800 py-3 text-sm focus:outline-none focus:border-white text-white uppercase tracking-widest placeholder:text-gray-600" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Search className="absolute right-0 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              </div>
+            </form>
+            
+            <div className="flex flex-col gap-6">
+              <Link to="/products" className="text-lg font-black uppercase tracking-widest text-white border-b border-gray-900 pb-2">Shop All</Link>
+              <div className="space-y-4">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">Categories</p>
+                <div className="grid grid-cols-1 gap-4">
                   {CATEGORIES.map((cat) => (
-                    <Link
-                      key={cat.name}
-                      to={`/products?category=${encodeURIComponent(cat.name)}`}
-                      onClick={() => setCatOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    >
-                      <span>{cat.emoji}</span> {cat.name}
+                    <Link key={cat.name} to={`/products?category=${encodeURIComponent(cat.name)}`} className="text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-white">
+                      {cat.name}
                     </Link>
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* Individual category pills */}
-            <div className="w-px h-5 bg-gray-200 mx-1 flex-shrink-0" />
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.name}
-                to={`/products?category=${encodeURIComponent(cat.name)}`}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors whitespace-nowrap flex-shrink-0"
-              >
-                <span className="text-base leading-none">{cat.emoji}</span>
-                {cat.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Mobile menu ── */}
-      {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white shadow-lg">
-          {/* Mobile search */}
-          <div className="px-4 pt-3 pb-2">
-            <form onSubmit={(e) => { handleSearch(e); setMenuOpen(false); }}
-              className="flex rounded-xl border border-gray-200 overflow-hidden focus-within:border-blue-500 transition-colors">
-              <input
-                type="text" placeholder="Search products…"
-                value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 px-4 py-2.5 text-sm outline-none bg-gray-50 placeholder-gray-400"
-              />
-              <button type="submit" className="bg-blue-600 px-4 flex items-center">
-                <Search className="h-4 w-4 text-white" />
-              </button>
-            </form>
-          </div>
-
-          {/* Categories section */}
-          <div className="px-4 pb-2">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-1">Categories</p>
-            <div className="grid grid-cols-2 gap-1">
-              {CATEGORIES.map((cat) => (
-                <Link
-                  key={cat.name}
-                  to={`/products?category=${encodeURIComponent(cat.name)}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                >
-                  <span>{cat.emoji}</span> {cat.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <hr className="border-gray-100 mx-4" />
-
-          {/* Account links */}
-          <div className="px-4 py-2 space-y-0.5">
-            {user ? (
-              <>
-                <div className="flex items-center gap-3 px-3 py-2.5">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">{user.name}</p>
-                    <p className="text-xs text-gray-400">{user.email}</p>
-                  </div>
-                </div>
-                <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
-                  <User className="h-4 w-4 text-gray-400" /> My Profile
-                </Link>
-                <Link to="/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
-                  <Package className="h-4 w-4 text-gray-400" /> My Orders
-                </Link>
-                <Link to="/wishlist" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
-                  <Heart className="h-4 w-4 text-gray-400" /> Wishlist
-                </Link>
-                {isAdmin && (
-                  <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-xl font-medium transition-colors">
-                    <LayoutDashboard className="h-4 w-4" /> Admin Panel
-                  </Link>
-                )}
-                <button onClick={() => { handleLogout(); setMenuOpen(false); }}
-                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl w-full text-left transition-colors">
-                  <LogOut className="h-4 w-4" /> Sign Out
-                </button>
-              </>
-            ) : (
-              <div className="flex gap-2 pt-1 pb-2">
-                <Link to="/login"    onClick={() => setMenuOpen(false)} className="flex-1 btn-secondary text-sm py-2.5 text-center">Login</Link>
-                <Link to="/register" onClick={() => setMenuOpen(false)} className="flex-1 btn-primary  text-sm py-2.5 text-center">Sign Up</Link>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
-    </nav>
+        )}
+      </nav>
+    </div>
   );
 }

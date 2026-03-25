@@ -28,48 +28,53 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+    <div className="min-h-[90vh] flex items-center justify-center px-4 py-32 bg-[#000000]">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-100 rounded-2xl mb-4">
-            <ShoppingBag className="h-7 w-7 text-blue-600" />
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-950 border border-gray-900 mb-6">
+            <ShoppingBag className="h-10 w-10 text-white stroke-[1]" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="text-gray-500 mt-1">Sign in to your account</p>
+          <h1 className="text-4xl font-black text-white uppercase tracking-tighter italic">Welcome Back</h1>
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Sign in to your account</p>
         </div>
 
-        <div className="card p-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <div className="bg-[#050505] border border-gray-900 p-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Email Address</label>
               <input
-                type="email" required placeholder="you@example.com"
+                type="email" required placeholder="EMAIL@EXAMPLE.COM"
                 value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="input-field"
+                className="input-field text-[11px] font-bold tracking-widest uppercase"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'} required placeholder="••••••••"
                   value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="input-field pr-10"
+                  className="input-field pr-12 text-[11px] font-bold tracking-widest"
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-white transition-colors">
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full py-2.5 mt-2">
-              {loading ? 'Signing in...' : 'Sign In'}
+            <button type="submit" disabled={loading} className="btn-primary w-full py-4 tracking-[0.2em] text-xs">
+              {loading ? 'AUTHENTICATING...' : 'SECURE SIGN IN'}
             </button>
           </form>
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-blue-600 font-medium hover:underline">Sign up</Link>
-          </p>
+          <div className="mt-12 text-center space-y-4">
+            <Link to="/register" className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hover:text-white transition-colors block">
+              Create New Account
+            </Link>
+            <div className="h-px bg-gray-900 w-12 mx-auto" />
+            <Link to="/" className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] hover:text-white transition-colors block">
+                Back to Store
+            </Link>
+          </div>
         </div>
       </div>
     </div>

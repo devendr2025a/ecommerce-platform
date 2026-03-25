@@ -26,51 +26,47 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Link to={`/products/${product._id}`} className="card group hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col">
-      <div className="relative overflow-hidden bg-gray-100 aspect-square">
+    <Link to={`/products/${product._id}`} className="card-hover overflow-hidden flex flex-col group bg-black border-gray-900 border-opacity-50">
+      <div className="relative overflow-hidden aspect-square bg-gray-950">
         {imageUrl ? (
-          <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          <img src={imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            <ShoppingCart className="h-12 w-12" />
+          <div className="w-full h-full flex items-center justify-center text-gray-800">
+            <ShoppingCart className="h-10 w-10 stroke-[1.5]" />
           </div>
         )}
         {product.discount > 0 && (
-          <span className="absolute top-2 left-2 badge bg-red-100 text-red-700 font-semibold">
-            -{product.discount}%
+          <span className="absolute top-3 left-3 bg-white text-black text-[10px] font-black px-2 py-1 uppercase tracking-tighter">
+            SALE -{product.discount}%
           </span>
         )}
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-semibold">Out of Stock</span>
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+            <span className="text-white text-[10px] font-black uppercase tracking-[0.2em] border border-white px-3 py-1.5">Out of Stock</span>
           </div>
         )}
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <span className="text-xs text-blue-600 font-medium mb-1">{product.category}</span>
-        <h3 className="font-semibold text-gray-800 line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors flex-1">
-          {product.name}
-        </h3>
-        {product.numReviews > 0 && (
-          <div className="flex items-center gap-1 mb-2">
-            <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs text-gray-600">{product.rating?.toFixed(1)} ({product.numReviews})</span>
-          </div>
-        )}
-        <div className="flex items-center justify-between mt-auto">
-          <div>
-            <span className="text-lg font-bold text-gray-900">₹{discountedPrice.toLocaleString('en-IN')}</span>
+        <div className="mb-2">
+            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">{product.category}</p>
+            <h3 className="text-sm font-bold text-white line-clamp-1 group-hover:text-gray-300 transition-colors">
+            {product.name}
+            </h3>
+        </div>
+        
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-900/50">
+          <div className="flex items-baseline gap-2">
+            <span className="text-sm font-black text-white tracking-tight">₹{discountedPrice.toLocaleString('en-IN')}</span>
             {product.discount > 0 && (
-              <span className="text-sm text-gray-400 line-through ml-2">₹{product.price.toLocaleString('en-IN')}</span>
+              <span className="text-[11px] text-gray-700 line-through">₹{product.price.toLocaleString('en-IN')}</span>
             )}
           </div>
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0}
-            className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Add to cart"
+            className="text-white hover:opacity-70 transition-opacity p-1 disabled:opacity-30"
           >
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-4 w-4 stroke-[2]" />
           </button>
         </div>
       </div>
