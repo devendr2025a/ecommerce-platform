@@ -198,3 +198,11 @@ Then login and navigate to `/admin`.
 - GST: 18% applied on all orders
 - Product images stored locally in `backend/src/uploads/`
 - For production: replace local image storage with Cloudinary
+
+
+
+
+## Note Create Admin 
+cd backend
+ADMIN_EMAIL=admin@shopeasy.com ADMIN_PASSWORD=Admin@123 npm run create-admin
+
