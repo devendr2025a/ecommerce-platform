@@ -6,10 +6,15 @@ import { userAPI, addressAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const TABS = [
-  { id: 'profile', label: 'Profile', icon: User },
-  { id: 'addresses', label: 'Addresses', icon: MapPin },
-  { id: 'security', label: 'Security', icon: Lock },
+  { id: 'profile',   label: 'Profile',    icon: User },
+  { id: 'addresses', label: 'Addresses',  icon: MapPin },
+  { id: 'security',  label: 'Security',   icon: Lock },
 ];
+
+const EMPTY_ADDR = {
+  fullName: '', phone: '', addressLine1: '', addressLine2: '',
+  city: '', state: '', pincode: '', country: 'India', isDefault: false,
+};
 
 export default function UserDashboard() {
   const { user, updateUser } = useAuth();
@@ -28,17 +33,17 @@ export default function UserDashboard() {
   const [addrLoading, setAddrLoading] = useState(true);
   const [editingAddr, setEditingAddr] = useState(null);
   const [showAddrForm, setShowAddrForm] = useState(false);
-  const [addrForm, setAddrForm] = useState({
-    fullName: '', phone: '', addressLine1: '', addressLine2: '',
-    city: '', state: '', pincode: '', country: 'India', isDefault: false
-  });
+  const [addrForm, setAddrForm] = useState(EMPTY_ADDR);
 
   useEffect(() => {
     if (activeTab === 'addresses') {
-      addressAPI.getAll().then(({ data }) => setAddresses(data.addresses)).finally(() => setAddrLoading(false));
+      addressAPI.getAll()
+        .then(({ data }) => setAddresses(data.addresses))
+        .finally(() => setAddrLoading(false));
     }
   }, [activeTab]);
 
+  /* ── Handlers ── */
   const handleProfileSave = async (e) => {
     e.preventDefault();
     setProfileLoading(true);
@@ -56,11 +61,11 @@ export default function UserDashboard() {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (passwords.newPassword !== passwords.confirmPassword) { toast.error('Passwords do not match'); return; }
-    if (passwords.newPassword.length < 6) { toast.error('Password must be at least 6 characters'); return; }
+    if (passwords.newPassword.length < 6) { toast.error('Minimum 6 characters required'); return; }
     setSecurityLoading(true);
     try {
       await userAPI.changePassword({ currentPassword: passwords.currentPassword, newPassword: passwords.newPassword });
-      toast.success('Password changed');
+      toast.success('Password changed successfully');
       setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Password change failed');
@@ -93,9 +98,7 @@ export default function UserDashboard() {
       await addressAPI.delete(id);
       setAddresses(addresses.filter((a) => a._id !== id));
       toast.success('Address deleted');
-    } catch {
-      toast.error('Failed to delete');
-    }
+    } catch { toast.error('Failed to delete'); }
   };
 
   const handleSetDefault = async (id) => {
@@ -103,9 +106,7 @@ export default function UserDashboard() {
       await addressAPI.setDefault(id);
       setAddresses(addresses.map((a) => ({ ...a, isDefault: a._id === id })));
       toast.success('Default address updated');
-    } catch {
-      toast.error('Failed to update');
-    }
+    } catch { toast.error('Failed to update'); }
   };
 
   const startEditAddress = (addr) => {
@@ -117,161 +118,259 @@ export default function UserDashboard() {
   const resetAddrForm = () => {
     setEditingAddr(null);
     setShowAddrForm(false);
-    setAddrForm({ fullName: '', phone: '', addressLine1: '', addressLine2: '', city: '', state: '', pincode: '', country: 'India', isDefault: false });
+    setAddrForm(EMPTY_ADDR);
   };
 
+  /* ── Render ── */
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <div className="flex flex-col md:flex-row md:items-center gap-6 mb-16 border-b border-gray-100 pb-12">
-        <div className="w-20 h-20 bg-gray-50 flex items-center justify-center border border-gray-100">
-          <User className="h-10 w-10 text-[var(--avro-black)] stroke-[1]" />
-        </div>
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black text-[var(--avro-black)] uppercase tracking-tighter italic">{user?.name}</h1>
-          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.4em]">{user?.email}</p>
-        </div>
-        <Link to="/orders" className="md:ml-auto flex items-center gap-3 bg-[var(--avro-black)] border border-[var(--avro-black)] px-6 py-3 text-[10px] font-black text-white hover:bg-gray-800 transition-all uppercase tracking-widest">
-          <Package className="h-4 w-4" /> MY ORDERS
-        </Link>
-      </div>
+    <div className="bg-white min-h-screen">
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Sidebar */}
-        <div className="lg:col-span-3 space-y-1">
-          {TABS.map(({ id, label, icon: Icon }) => (
-            <button key={id} onClick={() => setActiveTab(id)}
-              className={`w-full flex items-center gap-4 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${
-                activeTab === id 
-                  ? 'bg-[var(--avro-black)] text-white border-[var(--avro-black)]' 
-                  : 'text-gray-400 border-transparent hover:text-[var(--avro-black)] hover:border-gray-100'
-              }`}>
-              <Icon className="h-4 w-4" /> {label}
-            </button>
-          ))}
+      {/* Header */}
+      <section className="bg-[var(--vg-gray)] border-b border-[var(--vg-border)] py-10 sm:py-12 px-4">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center gap-5">
+          <div className="w-16 h-16 bg-white border border-[var(--vg-border)] flex items-center justify-center flex-shrink-0">
+            <User className="h-7 w-7 text-[var(--vg-black)] stroke-[1.5]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-black text-[var(--vg-black)] uppercase tracking-[0.06em] truncate">{user?.name}</h1>
+            <p className="text-[11px] text-[var(--vg-muted)] font-bold uppercase tracking-[0.3em] mt-0.5">{user?.email}</p>
+          </div>
+          <Link
+            to="/orders"
+            className="btn-primary flex items-center gap-2 self-start sm:self-auto whitespace-nowrap"
+          >
+            <Package className="h-3.5 w-3.5" /> My Orders
+          </Link>
         </div>
+      </section>
 
-        {/* Content */}
-        <div className="lg:col-span-9">
-          {activeTab === 'profile' && (
-            <div className="bg-white border border-gray-100 p-10 shadow-sm">
-              <h2 className="text-xs font-black text-[var(--avro-black)] uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-100">Personal Details</h2>
-              <form onSubmit={handleProfileSave} className="space-y-8 max-w-lg">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Full Identity</label>
-                  <input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className="input-field text-[11px] font-bold uppercase tracking-widest" required />
-                </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Electronic Mail</label>
-                  <input value={user?.email} className="input-field bg-gray-900/50 border-gray-800 text-gray-400 cursor-not-allowed text-[11px] font-bold tracking-widest" disabled />
-                  <p className="text-[9px] text-gray-600 font-bold uppercase italic mt-2 tracking-widest">Primary identifier cannot be modified</p>
-                </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Contact Terminal</label>
-                  <input value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} className="input-field text-[11px] font-bold uppercase tracking-widest font-mono" placeholder="PH +91 000 000 0000" maxLength={10} />
-                </div>
-                <button type="submit" disabled={profileLoading} className="btn-primary w-full py-4 tracking-[0.3em] text-[10px]">
-                  {profileLoading ? 'SYNCHRONIZING...' : 'COMMIT CHANGES'}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+
+          {/* Sidebar tabs */}
+          <div className="lg:col-span-3">
+            <div className="flex lg:flex-col gap-1 overflow-x-auto pb-1 lg:pb-0">
+              {TABS.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className={`flex items-center gap-3 px-4 py-3 text-[11px] font-black uppercase tracking-[0.2em] transition-all border whitespace-nowrap flex-shrink-0 lg:w-full
+                    ${activeTab === id
+                      ? 'bg-[var(--vg-black)] text-white border-[var(--vg-black)]'
+                      : 'text-[var(--vg-muted)] border-[var(--vg-border)] hover:text-[var(--vg-black)] hover:border-[var(--vg-black)] bg-white'
+                    }`}
+                >
+                  <Icon className="h-3.5 w-3.5 flex-shrink-0" /> {label}
                 </button>
-              </form>
+              ))}
             </div>
-          )}
+          </div>
 
-          {activeTab === 'addresses' && (
-            <div className="bg-[#111111] border border-gray-800 p-10 ring-1 ring-white/5">
-              <div className="flex items-center justify-between mb-10 pb-4 border-b border-gray-900">
-                <h2 className="text-xs font-black text-white uppercase tracking-[0.3em]">Logistic Nodes</h2>
-                {!showAddrForm && (
-                    <button onClick={() => { resetAddrForm(); setShowAddrForm(true); }} className="text-[10px] font-black text-gray-400 hover:text-white uppercase tracking-widest transition-colors flex items-center gap-2">
-                        <Plus className="h-3 w-3" /> REGISTER NEW
-                    </button>
-                )}
-              </div>
+          {/* Content panel */}
+          <div className="lg:col-span-9">
 
-              {showAddrForm && (
-                <form onSubmit={handleSaveAddress} className="mb-12 p-8 bg-black border border-white space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <h3 className="col-span-2 text-[10px] font-black text-white uppercase tracking-[0.4em] mb-4">{editingAddr ? 'REFINE NODE' : 'INITIALIZE NODE'}</h3>
-                    <input required placeholder="FULL NAME" value={addrForm.fullName} onChange={(e) => setAddrForm({ ...addrForm, fullName: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
-                    <input required placeholder="PHONE" value={addrForm.phone} onChange={(e) => setAddrForm({ ...addrForm, phone: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase font-mono" maxLength={10} />
-                    <input required placeholder="ADDRESS LINE 1" value={addrForm.addressLine1} onChange={(e) => setAddrForm({ ...addrForm, addressLine1: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
-                    <input placeholder="ADDRESS LINE 2" value={addrForm.addressLine2} onChange={(e) => setAddrForm({ ...addrForm, addressLine2: e.target.value })} className="input-field text-[10px] font-bold tracking-widest col-span-2 uppercase" />
-                    <input required placeholder="CITY" value={addrForm.city} onChange={(e) => setAddrForm({ ...addrForm, city: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase" />
-                    <input required placeholder="STATE" value={addrForm.state} onChange={(e) => setAddrForm({ ...addrForm, state: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase" />
-                    <input required placeholder="PINCODE" value={addrForm.pincode} onChange={(e) => setAddrForm({ ...addrForm, pincode: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase font-mono" maxLength={6} />
-                    <div className="flex items-center gap-3 pt-2">
-                        <input type="checkbox" id="defAddr" checked={addrForm.isDefault} onChange={(e) => setAddrForm({ ...addrForm, isDefault: e.target.checked })} className="w-4 h-4 accent-white bg-black border-gray-800" />
-                        <label htmlFor="defAddr" className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Primary Node</label>
-                    </div>
+            {/* ── Profile Tab ── */}
+            {activeTab === 'profile' && (
+              <div className="bg-white border border-[var(--vg-border)] p-6 sm:p-8">
+                <div className="mb-6 pb-4 border-b border-[var(--vg-border)]">
+                  <h2 className="text-[11px] font-black text-[var(--vg-black)] uppercase tracking-[0.3em]">Personal Details</h2>
+                </div>
+                <form onSubmit={handleProfileSave} className="space-y-5 max-w-md">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">Full Name</label>
+                    <input
+                      required value={profile.name}
+                      onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                      className="input-field text-sm"
+                      placeholder="Your full name"
+                    />
                   </div>
-                  <div className="flex gap-4 pt-4">
-                    <button type="submit" className="btn-primary flex-1 py-4 text-[10px] tracking-[0.3em]">COMMIT NODE</button>
-                    <button type="button" onClick={resetAddrForm} className="btn-secondary py-4 text-[10px] tracking-[0.3em]">ABORT</button>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">Email Address</label>
+                    <input
+                      value={user?.email}
+                      className="input-field text-sm bg-[var(--vg-gray)] text-[var(--vg-muted)] cursor-not-allowed"
+                      disabled
+                    />
+                    <p className="text-[10px] text-[var(--vg-muted)] italic">Email cannot be changed</p>
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">Phone Number</label>
+                    <input
+                      value={profile.phone}
+                      onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                      className="input-field text-sm"
+                      placeholder="+91 00000 00000"
+                      maxLength={10}
+                    />
+                  </div>
+                  <button type="submit" disabled={profileLoading} className="btn-primary w-full py-3">
+                    {profileLoading ? 'Saving…' : 'Save Changes'}
+                  </button>
                 </form>
-              )}
-
-              <div className="space-y-4">
-                {addresses.map((addr) => (
-                  <div key={addr._id} className={`p-8 border transition-all ${addr.isDefault ? 'bg-[#080808] border-white' : 'bg-black border-gray-900 hover:border-gray-800'}`}>
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                            <p className="text-[11px] font-black text-white uppercase tracking-[0.2em]">{addr.fullName}</p>
-                            {addr.isDefault && <span className="px-2 py-0.5 bg-white text-black text-[8px] font-black uppercase tracking-tighter">PRIMARY</span>}
-                        </div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest font-mono">{addr.phone}</p>
-                        <p className="text-[10px] text-gray-300 font-medium uppercase tracking-[0.15em] leading-relaxed max-w-sm">
-                            {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}<br />
-                            {addr.city}, {addr.state} - {addr.pincode}
-                        </p>
-                      </div>
-                      <div className="flex gap-4">
-                        {!addr.isDefault && (
-                          <button onClick={() => handleSetDefault(addr._id)} className="text-gray-700 hover:text-white transition-colors">
-                            <Check className="h-4 w-4" />
-                          </button>
-                        )}
-                        <button onClick={() => startEditAddress(addr)} className="text-gray-700 hover:text-white transition-colors">
-                          <Edit2 className="h-4 w-4" />
-                        </button>
-                        <button onClick={() => handleDeleteAddress(addr._id)} className="text-gray-700 hover:text-red-600 transition-colors">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {!addrLoading && addresses.length === 0 && !showAddrForm && (
-                  <div className="py-20 text-center border border-dashed border-gray-900">
-                    <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em]">No logistic data points found</p>
-                  </div>
-                )}
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'security' && (
-            <div className="bg-white border border-gray-100 p-10 shadow-sm">
-              <h2 className="text-xs font-black text-[var(--avro-black)] uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-100">Change Password</h2>
-              <form onSubmit={handlePasswordChange} className="space-y-8 max-w-lg">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Current Secret</label>
-                  <input type="password" required value={passwords.currentPassword} onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })} className="input-field" />
+            {/* ── Addresses Tab ── */}
+            {activeTab === 'addresses' && (
+              <div className="bg-white border border-[var(--vg-border)]">
+                <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[var(--vg-border)]">
+                  <h2 className="text-[11px] font-black text-[var(--vg-black)] uppercase tracking-[0.3em]">Saved Addresses</h2>
+                  {!showAddrForm && (
+                    <button
+                      onClick={() => { resetAddrForm(); setShowAddrForm(true); }}
+                      className="flex items-center gap-1.5 text-[10px] font-black text-[var(--vg-muted)] hover:text-[var(--vg-red)] uppercase tracking-widest transition-colors"
+                    >
+                      <Plus className="h-3 w-3" /> Add New
+                    </button>
+                  )}
                 </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">New Secret</label>
-                  <input type="password" required value={passwords.newPassword} onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })} className="input-field" />
+
+                <div className="p-6 sm:p-8 space-y-4">
+                  {/* Address form */}
+                  {showAddrForm && (
+                    <form onSubmit={handleSaveAddress} className="border border-[var(--vg-border)] bg-[var(--vg-gray)] p-5 sm:p-6 space-y-4 mb-2">
+                      <h3 className="text-[10px] font-black text-[var(--vg-black)] uppercase tracking-[0.3em]">
+                        {editingAddr ? 'Edit Address' : 'New Address'}
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input required placeholder="Full Name" value={addrForm.fullName}
+                          onChange={(e) => setAddrForm({ ...addrForm, fullName: e.target.value })}
+                          className="input-field text-sm sm:col-span-2" />
+                        <input required placeholder="Phone Number" value={addrForm.phone}
+                          onChange={(e) => setAddrForm({ ...addrForm, phone: e.target.value })}
+                          className="input-field text-sm sm:col-span-2" maxLength={10} />
+                        <input required placeholder="Address Line 1" value={addrForm.addressLine1}
+                          onChange={(e) => setAddrForm({ ...addrForm, addressLine1: e.target.value })}
+                          className="input-field text-sm sm:col-span-2" />
+                        <input placeholder="Address Line 2 (optional)" value={addrForm.addressLine2}
+                          onChange={(e) => setAddrForm({ ...addrForm, addressLine2: e.target.value })}
+                          className="input-field text-sm sm:col-span-2" />
+                        <input required placeholder="City" value={addrForm.city}
+                          onChange={(e) => setAddrForm({ ...addrForm, city: e.target.value })}
+                          className="input-field text-sm" />
+                        <input required placeholder="State" value={addrForm.state}
+                          onChange={(e) => setAddrForm({ ...addrForm, state: e.target.value })}
+                          className="input-field text-sm" />
+                        <input required placeholder="Pincode" value={addrForm.pincode}
+                          onChange={(e) => setAddrForm({ ...addrForm, pincode: e.target.value })}
+                          className="input-field text-sm" maxLength={6} />
+                        <div className="flex items-center gap-2 pt-1">
+                          <input type="checkbox" id="defAddr" checked={addrForm.isDefault}
+                            onChange={(e) => setAddrForm({ ...addrForm, isDefault: e.target.checked })}
+                            className="w-4 h-4 accent-black" />
+                          <label htmlFor="defAddr" className="text-[11px] font-bold text-[var(--vg-black)]">Set as default</label>
+                        </div>
+                      </div>
+                      <div className="flex gap-3 pt-2">
+                        <button type="submit" className="btn-primary flex-1 py-3">
+                          {editingAddr ? 'Update Address' : 'Save Address'}
+                        </button>
+                        <button type="button" onClick={resetAddrForm}
+                          className="border border-[var(--vg-border)] px-6 py-3 text-[11px] font-bold text-[var(--vg-muted)] hover:border-[var(--vg-black)] hover:text-[var(--vg-black)] transition-all uppercase tracking-widest">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+
+                  {/* Address list */}
+                  {addrLoading ? (
+                    <div className="text-center py-10 text-[var(--vg-muted)] text-sm">Loading…</div>
+                  ) : addresses.length === 0 && !showAddrForm ? (
+                    <div className="text-center py-14 border border-dashed border-[var(--vg-border)]">
+                      <MapPin className="h-8 w-8 text-[var(--vg-border)] mx-auto mb-3" />
+                      <p className="text-[11px] font-black text-[var(--vg-muted)] uppercase tracking-[0.3em]">No saved addresses</p>
+                      <button
+                        onClick={() => setShowAddrForm(true)}
+                        className="mt-4 text-[10px] font-bold text-[var(--vg-red)] uppercase tracking-widest hover:underline"
+                      >
+                        + Add your first address
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {addresses.map((addr) => (
+                        <div
+                          key={addr._id}
+                          className={`border p-5 transition-all ${addr.isDefault
+                            ? 'border-[var(--vg-black)] bg-[var(--vg-gray)]'
+                            : 'border-[var(--vg-border)] hover:border-[var(--vg-black)]'}`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="text-[13px] font-black text-[var(--vg-black)] uppercase tracking-[0.1em]">{addr.fullName}</p>
+                                {addr.isDefault && (
+                                  <span className="px-2 py-0.5 bg-[var(--vg-black)] text-white text-[8px] font-black uppercase tracking-wider">
+                                    Default
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[12px] text-[var(--vg-muted)] font-bold">{addr.phone}</p>
+                              <p className="text-[12px] text-[var(--vg-muted)] leading-relaxed">
+                                {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}<br />
+                                {addr.city}, {addr.state} — {addr.pincode}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              {!addr.isDefault && (
+                                <button onClick={() => handleSetDefault(addr._id)} title="Set as default"
+                                  className="p-1.5 text-[var(--vg-muted)] hover:text-[var(--vg-red)] transition-colors">
+                                  <Check className="h-4 w-4" />
+                                </button>
+                              )}
+                              <button onClick={() => startEditAddress(addr)}
+                                className="p-1.5 text-[var(--vg-muted)] hover:text-[var(--vg-black)] transition-colors">
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button onClick={() => handleDeleteAddress(addr._id)}
+                                className="p-1.5 text-[var(--vg-muted)] hover:text-[var(--vg-red)] transition-colors">
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Confirm Secret</label>
-                  <input type="password" required value={passwords.confirmPassword} onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })} className="input-field" />
+              </div>
+            )}
+
+            {/* ── Security Tab ── */}
+            {activeTab === 'security' && (
+              <div className="bg-white border border-[var(--vg-border)] p-6 sm:p-8">
+                <div className="mb-6 pb-4 border-b border-[var(--vg-border)]">
+                  <h2 className="text-[11px] font-black text-[var(--vg-black)] uppercase tracking-[0.3em]">Change Password</h2>
                 </div>
-                <button type="submit" disabled={securityLoading} className="btn-primary w-full py-4 tracking-[0.3em] text-[10px]">
-                  {securityLoading ? 'RECONFIGURING...' : 'UPDATE VAULT ACCESS'}
-                </button>
-              </form>
-            </div>
-          )}
+                <form onSubmit={handlePasswordChange} className="space-y-5 max-w-md">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">Current Password</label>
+                    <input type="password" required value={passwords.currentPassword}
+                      onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
+                      className="input-field text-sm" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">New Password</label>
+                    <input type="password" required value={passwords.newPassword}
+                      onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                      className="input-field text-sm" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-[var(--vg-muted)] uppercase tracking-widest">Confirm New Password</label>
+                    <input type="password" required value={passwords.confirmPassword}
+                      onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                      className="input-field text-sm" />
+                  </div>
+                  <button type="submit" disabled={securityLoading} className="btn-primary w-full py-3">
+                    {securityLoading ? 'Updating…' : 'Update Password'}
+                  </button>
+                </form>
+              </div>
+            )}
+
+          </div>
         </div>
       </div>
     </div>
