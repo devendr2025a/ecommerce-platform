@@ -3,9 +3,9 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CONTACTS = [
-  { icon: Mail, label: 'Email Us', value: 'support@avrotide.com', href: 'mailto:support@avrotide.com' },
-  { icon: Phone, label: 'Call Us', value: '+91-9876543210', href: 'tel:+919876543210' },
-  { icon: MapPin, label: 'Office', value: 'Gurugram, Haryana, India — 122001', href: null },
+  { icon: Mail, label: 'Email Us', value: 'Avrotidesolutions@gmail.com', href: 'mailto:Avrotidesolutions@gmail.com' },
+  { icon: Phone, label: 'Call Us', value: '+91 73883 30600', href: 'tel:+917388330600' },
+  { icon: MapPin, label: 'Office', value: 'India', href: null },
 ];
 
 export default function Contact() {
@@ -63,7 +63,7 @@ export default function Contact() {
 
               {/* WhatsApp CTA */}
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/917388330600"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full border border-[var(--vg-border)] py-3.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--vg-muted)] hover:text-[var(--vg-red)] hover:border-[var(--vg-red)] transition-all"

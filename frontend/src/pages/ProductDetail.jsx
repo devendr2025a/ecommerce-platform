@@ -275,7 +275,7 @@ export default function ProductDetail() {
 
                   {/* WhatsApp */}
                   <a
-                    href={`https://wa.me/910000000000?text=I'm interested in ${product.name}`}
+                    href={`https://wa.me/917388330600?text=I'm interested in ${product.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 border border-[var(--vg-border)] py-3.5 text-[11px] font-bold text-[var(--vg-muted)] hover:text-[var(--vg-red)] hover:border-[var(--vg-red)] transition-all uppercase tracking-[0.2em] w-full"
