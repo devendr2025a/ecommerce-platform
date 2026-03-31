@@ -122,25 +122,29 @@ export default function UserDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
-      <div className="flex flex-col md:flex-row md:items-center gap-6 mb-16 border-b border-gray-900 pb-12">
-        <div className="w-20 h-20 bg-white flex items-center justify-center border border-white">
-          <User className="h-10 w-10 text-black stroke-[1]" />
+      <div className="flex flex-col md:flex-row md:items-center gap-6 mb-16 border-b border-gray-100 pb-12">
+        <div className="w-20 h-20 bg-gray-50 flex items-center justify-center border border-gray-100">
+          <User className="h-10 w-10 text-[var(--avro-black)] stroke-[1]" />
         </div>
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">{user?.name}</h1>
-          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.4em]">{user?.email}</p>
+          <h1 className="text-3xl font-black text-[var(--avro-black)] uppercase tracking-tighter italic">{user?.name}</h1>
+          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.4em]">{user?.email}</p>
         </div>
-        <Link to="/orders" className="md:ml-auto flex items-center gap-3 bg-black border border-gray-800 px-6 py-3 text-[10px] font-black text-white hover:bg-white hover:text-black transition-all uppercase tracking-widest">
-          <Package className="h-4 w-4" /> RECENT ACQUISITIONS
+        <Link to="/orders" className="md:ml-auto flex items-center gap-3 bg-[var(--avro-black)] border border-[var(--avro-black)] px-6 py-3 text-[10px] font-black text-white hover:bg-gray-800 transition-all uppercase tracking-widest">
+          <Package className="h-4 w-4" /> MY ORDERS
         </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Sidebar */}
-        <div className="lg:col-span-3 space-y-2">
+        <div className="lg:col-span-3 space-y-1">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id)}
-              className={`w-full flex items-center gap-4 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${activeTab === id ? 'bg-white text-black border-white' : 'text-gray-500 border-transparent hover:text-white'}`}>
+              className={`w-full flex items-center gap-4 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all border ${
+                activeTab === id 
+                  ? 'bg-[var(--avro-black)] text-white border-[var(--avro-black)]' 
+                  : 'text-gray-400 border-transparent hover:text-[var(--avro-black)] hover:border-gray-100'
+              }`}>
               <Icon className="h-4 w-4" /> {label}
             </button>
           ))}
@@ -149,20 +153,20 @@ export default function UserDashboard() {
         {/* Content */}
         <div className="lg:col-span-9">
           {activeTab === 'profile' && (
-            <div className="bg-[#050505] border border-gray-900 p-10">
-              <h2 className="text-xs font-black text-white uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-900">Personal Records</h2>
+            <div className="bg-white border border-gray-100 p-10 shadow-sm">
+              <h2 className="text-xs font-black text-[var(--avro-black)] uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-100">Personal Details</h2>
               <form onSubmit={handleProfileSave} className="space-y-8 max-w-lg">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Full Identity</label>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Full Identity</label>
                   <input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className="input-field text-[11px] font-bold uppercase tracking-widest" required />
                 </div>
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Electronic Mail</label>
-                  <input value={user?.email} className="input-field bg-gray-950 border-gray-900 text-gray-700 cursor-not-allowed text-[11px] font-bold tracking-widest" disabled />
-                  <p className="text-[9px] text-gray-700 font-bold uppercase italic mt-2 tracking-widest">Primary identifier cannot be modified</p>
+                  <input value={user?.email} className="input-field bg-gray-900/50 border-gray-800 text-gray-400 cursor-not-allowed text-[11px] font-bold tracking-widest" disabled />
+                  <p className="text-[9px] text-gray-600 font-bold uppercase italic mt-2 tracking-widest">Primary identifier cannot be modified</p>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Contact Terminal</label>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Contact Terminal</label>
                   <input value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} className="input-field text-[11px] font-bold uppercase tracking-widest font-mono" placeholder="PH +91 000 000 0000" maxLength={10} />
                 </div>
                 <button type="submit" disabled={profileLoading} className="btn-primary w-full py-4 tracking-[0.3em] text-[10px]">
@@ -173,7 +177,7 @@ export default function UserDashboard() {
           )}
 
           {activeTab === 'addresses' && (
-            <div className="bg-[#050505] border border-gray-900 p-10">
+            <div className="bg-[#111111] border border-gray-800 p-10 ring-1 ring-white/5">
               <div className="flex items-center justify-between mb-10 pb-4 border-b border-gray-900">
                 <h2 className="text-xs font-black text-white uppercase tracking-[0.3em]">Logistic Nodes</h2>
                 {!showAddrForm && (
@@ -196,7 +200,7 @@ export default function UserDashboard() {
                     <input required placeholder="PINCODE" value={addrForm.pincode} onChange={(e) => setAddrForm({ ...addrForm, pincode: e.target.value })} className="input-field text-[10px] font-bold tracking-widest uppercase font-mono" maxLength={6} />
                     <div className="flex items-center gap-3 pt-2">
                         <input type="checkbox" id="defAddr" checked={addrForm.isDefault} onChange={(e) => setAddrForm({ ...addrForm, isDefault: e.target.checked })} className="w-4 h-4 accent-white bg-black border-gray-800" />
-                        <label htmlFor="defAddr" className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Primary Node</label>
+                        <label htmlFor="defAddr" className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Primary Node</label>
                     </div>
                   </div>
                   <div className="flex gap-4 pt-4">
@@ -215,8 +219,8 @@ export default function UserDashboard() {
                             <p className="text-[11px] font-black text-white uppercase tracking-[0.2em]">{addr.fullName}</p>
                             {addr.isDefault && <span className="px-2 py-0.5 bg-white text-black text-[8px] font-black uppercase tracking-tighter">PRIMARY</span>}
                         </div>
-                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest font-mono">{addr.phone}</p>
-                        <p className="text-[10px] text-gray-500 font-medium uppercase tracking-[0.15em] leading-relaxed max-w-sm">
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest font-mono">{addr.phone}</p>
+                        <p className="text-[10px] text-gray-300 font-medium uppercase tracking-[0.15em] leading-relaxed max-w-sm">
                             {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}<br />
                             {addr.city}, {addr.state} - {addr.pincode}
                         </p>
@@ -247,19 +251,19 @@ export default function UserDashboard() {
           )}
 
           {activeTab === 'security' && (
-            <div className="bg-[#050505] border border-gray-900 p-10">
-              <h2 className="text-xs font-black text-white uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-900">Vault Access</h2>
+            <div className="bg-white border border-gray-100 p-10 shadow-sm">
+              <h2 className="text-xs font-black text-[var(--avro-black)] uppercase tracking-[0.3em] mb-10 pb-4 border-b border-gray-100">Change Password</h2>
               <form onSubmit={handlePasswordChange} className="space-y-8 max-w-lg">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Current Secret</label>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Current Secret</label>
                   <input type="password" required value={passwords.currentPassword} onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })} className="input-field" />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">New Secret</label>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">New Secret</label>
                   <input type="password" required value={passwords.newPassword} onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })} className="input-field" />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Confirm Secret</label>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Confirm Secret</label>
                   <input type="password" required value={passwords.confirmPassword} onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })} className="input-field" />
                 </div>
                 <button type="submit" disabled={securityLoading} className="btn-primary w-full py-4 tracking-[0.3em] text-[10px]">

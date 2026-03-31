@@ -20,6 +20,11 @@ const getProducts = async (req, res, next) => {
     }
 
     if (req.query.category) query.category = req.query.category;
+    if (req.query.size) query.sizes = req.query.size;
+    if (req.query.color) query.colors = req.query.color;
+    if (req.query.material) query.material = { $regex: req.query.material, $options: 'i' };
+    if (req.query.fit) query.fit = req.query.fit;
+    if (req.query.occasion) query.occasion = req.query.occasion;
 
     if (req.query.minPrice || req.query.maxPrice) {
       query.price = {};
@@ -32,6 +37,8 @@ const getProducts = async (req, res, next) => {
       'price-desc': { price: -1 },
       newest: { createdAt: -1 },
       rating: { rating: -1 },
+      'best-selling': { salesCount: -1 },
+      'trending': { numReviews: -1, rating: -1 }
     };
     const sort = sortMap[req.query.sort] || { createdAt: -1 };
 
@@ -77,7 +84,7 @@ const getProduct = async (req, res, next) => {
 // @access  Admin
 const createProduct = async (req, res, next) => {
   try {
-    const { name, description, price, discount, category, stock } = req.body;
+    const { name, description, price, discount, category, stock, sizes, colors, material, fit, occasion } = req.body;
 
     // Upload images to Cloudinary
     const images = [];
@@ -95,6 +102,11 @@ const createProduct = async (req, res, next) => {
       discount: Number(discount) || 0,
       category,
       stock: Number(stock),
+      sizes: sizes ? (Array.isArray(sizes) ? sizes : sizes.split(',')) : [],
+      colors: colors ? (Array.isArray(colors) ? colors : colors.split(',')) : [],
+      material,
+      fit,
+      occasion,
       images,
     });
 
@@ -114,7 +126,7 @@ const updateProduct = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    const { name, description, price, discount, category, stock, isActive } = req.body;
+    const { name, description, price, discount, category, stock, isActive, sizes, colors, material, fit, occasion } = req.body;
     const updates = {};
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
@@ -123,6 +135,11 @@ const updateProduct = async (req, res, next) => {
     if (discount !== undefined) updates.discount = Number(discount);
     if (stock !== undefined) updates.stock = Number(stock);
     if (isActive !== undefined) updates.isActive = isActive === 'true' || isActive === true;
+    if (sizes !== undefined) updates.sizes = Array.isArray(sizes) ? sizes : sizes.split(',');
+    if (colors !== undefined) updates.colors = Array.isArray(colors) ? colors : colors.split(',');
+    if (material !== undefined) updates.material = material;
+    if (fit !== undefined) updates.fit = fit;
+    if (occasion !== undefined) updates.occasion = occasion;
 
     // Upload new images to Cloudinary and append
     if (req.files && req.files.length > 0) {

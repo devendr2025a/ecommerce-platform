@@ -59,12 +59,21 @@ const productSchema = new mongoose.Schema(
         'Kurtas & Suits',
       ],
     },
+    salesCount: {
+      type: Number,
+      default: 0,
+    },
     stock: {
       type: Number,
       required: [true, 'Stock is required'],
       min: [0, 'Stock cannot be negative'],
       default: 0,
     },
+    sizes: [{ type: String }],
+    colors: [{ type: String }],
+    material: { type: String },
+    fit: { type: String },
+    occasion: { type: String },
     reviews: [reviewSchema],
     numReviews: {
       type: Number,

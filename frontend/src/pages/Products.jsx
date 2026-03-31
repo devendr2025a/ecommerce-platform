@@ -33,103 +33,111 @@ export default function Products() {
   const handleReset = () => setFilters(DEFAULT_FILTERS);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <div className="flex flex-col gap-2 mb-12">
-        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">Explore Collections</h1>
-        <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">
-                {meta.total !== undefined ? `${meta.total} Items Available` : 'Loading...'}
+    <div className="bg-white min-h-screen">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 py-8 md:py-12">
+
+        {/* Header bar */}
+        <div className="flex items-center justify-between mb-6 md:mb-10">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-[var(--vg-black)] uppercase tracking-[0.1em]">
+              All Products
+            </h1>
+            <p className="text-[11px] font-bold text-[var(--vg-muted)] uppercase tracking-[0.3em] mt-0.5">
+              {meta.total !== undefined ? `${meta.total} items available` : 'Loading...'}
             </p>
-            <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="md:hidden flex items-center gap-2 btn-secondary text-[10px] tracking-widest uppercase font-black py-2 px-4 shadow-none border-gray-900"
-            >
-                <SlidersHorizontal className="h-3 w-3" />
-                Filters
-            </button>
-        </div>
-      </div>
-
-      <div className="flex gap-12">
-        {/* Desktop Filters */}
-        <aside className="hidden md:block w-72 flex-shrink-0">
-          <ProductFilter filters={filters} onChange={setFilters} onReset={handleReset} />
-        </aside>
-
-        {/* Mobile Filters Drawer */}
-        {showFilters && (
-          <div className="fixed inset-0 z-[100] md:hidden">
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setShowFilters(false)} />
-            <div className="absolute right-0 top-0 h-full w-80 bg-black border-l border-gray-900 p-8 overflow-y-auto">
-              <div className="flex items-center justify-between mb-10 pb-4 border-b border-gray-900">
-                <h3 className="text-xs font-black text-white uppercase tracking-[0.3em]">Filters</h3>
-                <button onClick={() => setShowFilters(false)} className="text-gray-500 hover:text-white transition-colors">
-                    <X className="h-5 w-5" />
-                </button>
-              </div>
-              <ProductFilter filters={filters} onChange={(f) => { setFilters(f); setShowFilters(false); }} onReset={() => { handleReset(); setShowFilters(false); }} />
-            </div>
           </div>
-        )}
+          {/* Mobile filter trigger */}
+          <button
+            onClick={() => setShowFilters(true)}
+            className="md:hidden flex items-center gap-2 border border-[var(--vg-border)] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--vg-black)] hover:bg-[var(--vg-gray)] transition-colors"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            Filters
+          </button>
+        </div>
 
-        {/* Products Grid */}
-        <div className="flex-1">
-          {loading ? (
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-                {/* Skeletons could go here, for now using Loading component */}
-                <div className="col-span-full py-32 text-center">
-                    <Loading fullScreen={false} />
+        <div className="flex gap-10">
+          {/* Desktop Sidebar Filters */}
+          <aside className="hidden md:block w-64 lg:w-72 flex-shrink-0 self-start sticky top-28">
+            <ProductFilter filters={filters} onChange={setFilters} onReset={handleReset} />
+          </aside>
+
+          {/* Mobile Filters Drawer */}
+          {showFilters && (
+            <div className="fixed inset-0 z-[100] md:hidden">
+              <div className="absolute inset-0 bg-black/40" onClick={() => setShowFilters(false)} />
+              <div className="absolute right-0 top-0 h-full w-[85vw] max-w-sm bg-white p-6 overflow-y-auto shadow-2xl">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--vg-border)]">
+                  <h3 className="text-[11px] font-black text-[var(--vg-black)] uppercase tracking-[0.3em]">Filters</h3>
+                  <button onClick={() => setShowFilters(false)} className="text-[var(--vg-muted)] hover:text-[var(--vg-black)] transition-colors">
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
-            </div>
-          ) : products.length > 0 ? (
-            <>
-              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
-                {products.map((product) => <ProductCard key={product._id} product={product} />)}
+                <ProductFilter
+                  filters={filters}
+                  onChange={(f) => { setFilters(f); setShowFilters(false); }}
+                  onReset={() => { handleReset(); setShowFilters(false); }}
+                />
               </div>
-              
-              {/* Pagination */}
-              {meta.totalPages > 1 && (
-                <div className="flex items-center justify-center gap-4 mt-24 border-t border-gray-900 pt-12">
-                  <button
-                    onClick={() => setFilters((f) => ({ ...f, page: f.page - 1 }))}
-                    disabled={!meta.hasPrev}
-                    className="p-3 text-white hover:bg-gray-950 disabled:opacity-20 border border-gray-900 transition-all"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  
-                  <div className="flex items-center gap-2">
-                    {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                        key={page}
-                        onClick={() => setFilters((f) => ({ ...f, page }))}
-                        className={`w-10 h-10 text-[11px] font-black transition-all border ${
-                            filters.page === page 
-                            ? 'bg-white text-black border-white' 
-                            : 'text-gray-500 border-gray-900 hover:border-gray-600'
-                        }`}
-                        >
-                        {page}
-                        </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
-                    disabled={!meta.hasNext}
-                    className="p-3 text-white hover:bg-gray-950 disabled:opacity-20 border border-gray-900 transition-all"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-40 bg-[#020202] border border-dashed border-gray-900">
-              <p className="text-xs font-black text-gray-500 uppercase tracking-[0.4em] mb-6">No matches found in our records</p>
-              <button onClick={handleReset} className="btn-primary">Clear all filters</button>
             </div>
           )}
+
+          {/* Products Grid */}
+          <div className="flex-1 min-w-0">
+            {loading ? (
+              <div className="flex items-center justify-center py-32">
+                <Loading fullScreen={false} />
+              </div>
+            ) : products.length > 0 ? (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-8 sm:gap-x-4 sm:gap-y-10 md:gap-x-5 md:gap-y-12">
+                  {products.map((product) => <ProductCard key={product._id} product={product} />)}
+                </div>
+
+                {/* Pagination */}
+                {meta.totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-16 pt-10 border-t border-[var(--vg-border)] flex-wrap">
+                    <button
+                      onClick={() => setFilters((f) => ({ ...f, page: f.page - 1 }))}
+                      disabled={!meta.hasPrev}
+                      className="p-3 text-[var(--vg-black)] hover:bg-[var(--vg-gray)] disabled:opacity-30 border border-[var(--vg-border)] transition-all"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+
+                    <div className="flex items-center gap-1 flex-wrap justify-center">
+                      {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setFilters((f) => ({ ...f, page }))}
+                          className={`w-9 h-9 text-[11px] font-black transition-all border ${
+                            filters.page === page
+                              ? 'bg-[var(--vg-black)] text-white border-[var(--vg-black)]'
+                              : 'text-[var(--vg-muted)] border-[var(--vg-border)] hover:border-[var(--vg-black)]'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
+                      disabled={!meta.hasNext}
+                      className="p-3 text-[var(--vg-black)] hover:bg-[var(--vg-gray)] disabled:opacity-30 border border-[var(--vg-border)] transition-all"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-24 bg-[var(--vg-gray)] border border-dashed border-[var(--vg-border)]">
+                <p className="text-[12px] font-bold text-[var(--vg-muted)] uppercase tracking-[0.4em] mb-6">No matches found</p>
+                <button onClick={handleReset} className="btn-primary">Clear All Filters</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

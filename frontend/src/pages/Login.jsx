@@ -28,17 +28,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center px-4 py-32 bg-[#000000]">
+    <div className="min-h-[90vh] flex items-center justify-center px-4 py-20 bg-[var(--vg-gray)]">
       <div className="w-full max-w-md">
-        <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-950 border border-gray-900 mb-6">
-            <ShoppingBag className="h-10 w-10 text-white stroke-[1]" />
-          </div>
-          <h1 className="text-4xl font-black text-white uppercase tracking-tighter italic">Welcome Back</h1>
-          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Sign in to your account</p>
+        <div className="text-center mb-10">
+          <img src="/assets/logo.png" alt="AVROTIDE" className="h-10 w-auto brightness-0 mx-auto mb-6" />
+          <h1 className="text-2xl font-black uppercase tracking-[0.15em] text-[var(--vg-black)]">Welcome Back</h1>
+          <p className="text-[12px] text-[var(--vg-muted)] mt-2 uppercase tracking-widest">Sign in to your account</p>
         </div>
 
-        <div className="bg-[#050505] border border-gray-900 p-10">
+        <div className="bg-white border border-[var(--vg-border)] p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Email Address</label>
@@ -66,13 +64,12 @@ export default function Login() {
               {loading ? 'AUTHENTICATING...' : 'SECURE SIGN IN'}
             </button>
           </form>
-          <div className="mt-12 text-center space-y-4">
-            <Link to="/register" className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hover:text-white transition-colors block">
-              Create New Account
+          <div className="mt-8 text-center space-y-3">
+            <Link to="/register" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--vg-muted)] hover:text-[var(--vg-red)] transition-colors block">
+              Create an Account
             </Link>
-            <div className="h-px bg-gray-900 w-12 mx-auto" />
-            <Link to="/" className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] hover:text-white transition-colors block">
-                Back to Store
+            <Link to="/" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--vg-muted)] hover:text-[var(--vg-black)] transition-colors block">
+              Continue Shopping
             </Link>
           </div>
         </div>
