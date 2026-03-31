@@ -126,7 +126,11 @@ const updateProduct = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    const { name, description, price, discount, category, stock, isActive, sizes, colors, material, fit, occasion } = req.body;
+    const {
+      name, description, price, discount, category, stock, isActive,
+      sizes, colors, material, fit, occasion, deleteImages,
+    } = req.body;
+
     const updates = {};
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
@@ -141,14 +145,34 @@ const updateProduct = async (req, res, next) => {
     if (fit !== undefined) updates.fit = fit;
     if (occasion !== undefined) updates.occasion = occasion;
 
-    // Upload new images to Cloudinary and append
+    // Handle deletion of specific existing images
+    let currentImages = [...product.images];
+    if (deleteImages) {
+      const idsToDelete = Array.isArray(deleteImages) ? deleteImages : [deleteImages];
+      for (const imgId of idsToDelete) {
+        const img = currentImages.find((i) => i._id.toString() === imgId);
+        if (img?.public_id) {
+          await deleteFromCloudinary(img.public_id).catch((err) =>
+            console.warn('Cloudinary delete skipped:', err.message)
+          );
+        }
+        currentImages = currentImages.filter((i) => i._id.toString() !== imgId);
+      }
+    }
+
+    // Upload any new images and append to the (possibly trimmed) current list
     if (req.files && req.files.length > 0) {
       const newImages = [];
       for (const file of req.files) {
         const result = await uploadToCloudinary(file.buffer, 'ecommerce/products');
         newImages.push({ url: result.url, public_id: result.public_id });
       }
-      updates.images = [...product.images, ...newImages];
+      currentImages = [...currentImages, ...newImages];
+    }
+
+    // Always persist the final image list if changes were made
+    if (deleteImages || (req.files && req.files.length > 0)) {
+      updates.images = currentImages;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updates, {

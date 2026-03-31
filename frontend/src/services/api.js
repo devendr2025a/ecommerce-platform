@@ -117,6 +117,7 @@ export const orderAPI = {
   create: (data) => api.post('/orders', data),
   getMy: (params) => api.get('/orders/my', { params }),
   getOne: (id) => api.get(`/orders/${id}`),
+  getById: (id) => api.get(`/orders/${id}`),   // alias used by TrackOrder
   getAll: (params) => api.get('/orders', { params }),
   updateStatus: (id, data) => api.put(`/orders/${id}/status`, data),
 };
