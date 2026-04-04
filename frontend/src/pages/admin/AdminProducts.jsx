@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://loc
 const CATEGORIES = [
   "Women's Wear", "Men's Wear", "Kids' Wear", 'Ethnic Wear', 'Western Wear',
   'Footwear', 'Accessories', 'Bags & Handbags', 'Jewellery', 'Activewear',
-  'Innerwear & Sleepwear', 'Winter Wear', 'Sarees', 'Kurtas & Suits',
+  'Innerwear & Sleepwear', 'Winter Wear', 'Sarees',  'Kurtas & Suits', 'Dupatta', 'Socks','Napkins','Caps','T-Shirts',
 ];
 
 const EMPTY_FORM = {
