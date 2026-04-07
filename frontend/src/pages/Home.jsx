@@ -6,6 +6,7 @@ import {
   Truck,
   RefreshCw,
   Headphones,
+  CheckCircle2,
 } from "lucide-react";
 import { productAPI } from "../services/api";
 import ProductCard from "../components/products/ProductCard";
@@ -33,6 +34,14 @@ const TRUST_PILLARS = [
     title: "Dedicated Support",
     desc: "Here to help every step of the way",
   },
+];
+
+const WHY_CHOOSE = [
+  "100% Authentic & Premium Fabrics",
+  "Handcrafted by Skilled Artisans",
+  "Direct Sourcing from Small Retailers",
+  "Affordable Luxury Pricing",
+  "Trusted by 2000+ Happy Customers",
 ];
 
 const CATEGORIES = [
@@ -219,6 +228,28 @@ export default function Home() {
                 About Us
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why Choose Avrotide (Before Final CTA) ── */}
+      <section className="py-12 md:py-16 bg-white border-b border-[var(--vg-border)]">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10">
+          <h2 className="text-2xl font-black text-[var(--vg-black)] uppercase tracking-[0.08em] text-center mb-8">
+            Why Choose Avrotide?
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            {WHY_CHOOSE.map((item) => (
+              <div
+                key={item}
+                className="flex items-center gap-3 p-3 border border-[var(--vg-border)] bg-[var(--vg-gray)] cursor-pointer hover:border-[var(--vg-red)] hover:bg-white hover:shadow-md transition-all duration-300 group"
+              >
+                <CheckCircle2 className="h-4 w-4 text-[var(--vg-red)] flex-shrink-0 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-[var(--vg-black)] uppercase tracking-[0.05em] group-hover:text-[var(--vg-red)] transition-colors">
+                  {item}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
