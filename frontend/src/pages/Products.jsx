@@ -7,6 +7,130 @@ import Loading from '../components/common/Loading';
 
 const DEFAULT_FILTERS = { search: '', category: '', minPrice: '', maxPrice: '', sort: '', page: 1, limit: 12 };
 
+// Pagination Component - Inline for this page
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const getVisiblePages = () => {
+    const visiblePages = [];
+    for (let i = 1; i <= Math.min(5, totalPages); i++) {
+      visiblePages.push(i);
+    }
+    return visiblePages;
+  };
+
+  const visiblePages = getVisiblePages();
+  const hasNextPages = totalPages > 5;
+  const hasPrevPages = currentPage > 1;
+  const isBeyondFirstBlock = currentPage > 5;
+
+  const handlePageClick = (page) => {
+    if (page !== currentPage && page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextBlock = () => {
+    const nextBlockStart = Math.floor((currentPage - 1) / 5) * 5 + 6;
+    if (nextBlockStart <= totalPages) {
+      onPageChange(nextBlockStart);
+    }
+  };
+
+  const handlePrevBlock = () => {
+    const prevBlockStart = Math.floor((currentPage - 1) / 5) * 5;
+    if (prevBlockStart >= 1) {
+      onPageChange(prevBlockStart);
+    }
+  };
+
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-16 pt-10 border-t border-[var(--vg-border)] flex-wrap">
+      {/* Previous Button */}
+      <button
+        onClick={handlePrev}
+        disabled={!hasPrevPages}
+        className={`p-3 rounded-md border border-[var(--vg-border)] transition-all duration-200 ${
+          hasPrevPages 
+            ? 'hover:bg-[var(--vg-gray)] hover:border-[var(--vg-red)] hover:text-[var(--vg-red)] cursor-pointer' 
+            : 'opacity-40 cursor-not-allowed'
+        }`}
+        aria-label="Previous page"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      {/* Previous Block Button */}
+      {isBeyondFirstBlock && (
+        <button
+          onClick={handlePrevBlock}
+          className="px-3 py-2 text-xs font-bold rounded-md border border-[var(--vg-border)] text-[var(--vg-black)] hover:bg-[var(--vg-gray)] hover:border-[var(--vg-red)] hover:text-[var(--vg-red)] transition-all duration-200"
+          aria-label="Previous block"
+        >
+          ...
+        </button>
+      )}
+
+      {/* Page Numbers (1 to 5) */}
+      {visiblePages.map((page) => (
+        <button
+          key={page}
+          onClick={() => handlePageClick(page)}
+          className={`min-w-[38px] h-9 px-2 text-sm font-bold rounded-md border transition-all duration-200 ${
+            currentPage === page
+              ? 'bg-[var(--vg-red)] text-white border-[var(--vg-red)] cursor-default'
+              : 'border-[var(--vg-border)] text-[var(--vg-black)] hover:bg-[var(--vg-gray)] hover:border-[var(--vg-red)] hover:text-[var(--vg-red)]'
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+
+      {/* Next Block Button */}
+      {hasNextPages && (
+        <button
+          onClick={handleNextBlock}
+          className="px-3 py-2 text-xs font-bold rounded-md border border-[var(--vg-border)] text-[var(--vg-black)] hover:bg-[var(--vg-gray)] hover:border-[var(--vg-red)] hover:text-[var(--vg-red)] transition-all duration-200"
+          aria-label="Next block"
+        >
+          ...
+        </button>
+      )}
+
+      {/* Next Button */}
+      <button
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+        className={`p-3 rounded-md border border-[var(--vg-border)] transition-all duration-200 ${
+          currentPage !== totalPages
+            ? 'hover:bg-[var(--vg-gray)] hover:border-[var(--vg-red)] hover:text-[var(--vg-red)] cursor-pointer'
+            : 'opacity-40 cursor-not-allowed'
+        }`}
+        aria-label="Next page"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+
+      {/* Total Pages Indicator */}
+      <span className="text-[10px] text-[var(--vg-muted)] ml-2">
+        Page {currentPage} of {totalPages}
+      </span>
+    </div>
+  );
+};
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [meta, setMeta] = useState({});
@@ -31,6 +155,11 @@ export default function Products() {
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
   const handleReset = () => setFilters(DEFAULT_FILTERS);
+
+  const handlePageChange = (newPage) => {
+    setFilters((f) => ({ ...f, page: newPage }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="bg-white min-h-screen">
@@ -94,42 +223,12 @@ export default function Products() {
                   {products.map((product) => <ProductCard key={product._id} product={product} />)}
                 </div>
 
-                {/* Pagination */}
-                {meta.totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-16 pt-10 border-t border-[var(--vg-border)] flex-wrap">
-                    <button
-                      onClick={() => setFilters((f) => ({ ...f, page: f.page - 1 }))}
-                      disabled={!meta.hasPrev}
-                      className="p-3 text-[var(--vg-black)] hover:bg-[var(--vg-gray)] disabled:opacity-30 border border-[var(--vg-border)] transition-all"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </button>
-
-                    <div className="flex items-center gap-1 flex-wrap justify-center">
-                      {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => setFilters((f) => ({ ...f, page }))}
-                          className={`w-9 h-9 text-[11px] font-black transition-all border ${
-                            filters.page === page
-                              ? 'bg-[var(--vg-black)] text-white border-[var(--vg-black)]'
-                              : 'text-[var(--vg-muted)] border-[var(--vg-border)] hover:border-[var(--vg-black)]'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
-                      disabled={!meta.hasNext}
-                      className="p-3 text-[var(--vg-black)] hover:bg-[var(--vg-gray)] disabled:opacity-30 border border-[var(--vg-border)] transition-all"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
+                {/* New Pagination Component */}
+                <Pagination
+                  currentPage={filters.page || 1}
+                  totalPages={meta.totalPages || 1}
+                  onPageChange={handlePageChange}
+                />
               </>
             ) : (
               <div className="text-center py-24 bg-[var(--vg-gray)] border border-dashed border-[var(--vg-border)]">
