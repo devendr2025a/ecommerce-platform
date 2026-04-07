@@ -193,6 +193,7 @@ export default function Home() {
                   <p className="text-xl sm:text-2xl font-black text-[var(--vg-black)]">
                     2K+
                   </p>
+                  
                   <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-[var(--vg-muted)] font-bold mt-0.5">
                     Happy Customers
                   </p>
