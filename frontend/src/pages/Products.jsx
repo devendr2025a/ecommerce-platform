@@ -144,6 +144,8 @@ export default function Products() {
       const cleanFilters = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== ''));
       const { data } = await productAPI.getAll(cleanFilters);
       setProducts(data.products);
+      console.log("here i am =================================>");
+      console.log(data.products);
       setMeta(data.meta);
     } catch {
       // silent

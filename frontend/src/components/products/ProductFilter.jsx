@@ -2,9 +2,9 @@ import React from 'react';
 import { Search, X } from 'lucide-react';
 
 const CATEGORIES = [
-  "Women's Wear", "Men's Wear", "Kids' Wear", 'Ethnic Wear', 'Western Wear',
-  'Footwear', 'Accessories', 'Bags & Handbags', 'Jewellery', 'Activewear',
-  'Innerwear & Sleepwear', 'Winter Wear', 'Sarees', 'Kurtas & Suits', 'Dupatta','Caps','T-Shirts','Socks','Napkins'
+  "Silk Sarees", '100% Cotton Kurtas', 'Chikankari Suits', 'Ethnic Wear', 
+   'Accessories',  
+  , 'Linen Shirts & Pants', 'Pashmina Stoles' ,'Dupatta','Caps','T-Shirts','Socks','Napkins'
 ];
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];

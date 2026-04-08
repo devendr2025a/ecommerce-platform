@@ -1,7 +1,7 @@
 const Product = require('../models/Product');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
-// @desc    Get all products (with pagination, search, filter)
+// @desc    Get all products
 // @route   GET /api/products
 // @access  Public
 const getProducts = async (req, res, next) => {
@@ -86,7 +86,6 @@ const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, discount, category, stock, sizes, colors, material, fit, occasion } = req.body;
 
-    // Upload images to Cloudinary
     const images = [];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
@@ -95,11 +94,16 @@ const createProduct = async (req, res, next) => {
       }
     }
 
+    // ⭐ FINAL PRICE CALCULATION
+    const finalPrice = Math.round(Number(price) - (Number(price) * Number(discount || 0)) / 100);
+     
+
     const product = await Product.create({
       name,
       description,
       price: Number(price),
       discount: Number(discount) || 0,
+      finalPrice,           // ⭐ ADDED
       category,
       stock: Number(stock),
       sizes: sizes ? (Array.isArray(sizes) ? sizes : sizes.split(',')) : [],
@@ -109,6 +113,8 @@ const createProduct = async (req, res, next) => {
       occasion,
       images,
     });
+
+    console.log(product);
 
     res.status(201).json({ success: true, message: 'Product created', product });
   } catch (error) {
@@ -145,22 +151,27 @@ const updateProduct = async (req, res, next) => {
     if (fit !== undefined) updates.fit = fit;
     if (occasion !== undefined) updates.occasion = occasion;
 
-    // Handle deletion of specific existing images
+    // ⭐ RECALCULATE FINAL PRICE WHEN PRICE OR DISCOUNT CHANGES
+    if (price !== undefined || discount !== undefined) {
+      const newPrice = price !== undefined ? Number(price) : product.price;
+      const newDiscount = discount !== undefined ? Number(discount) : product.discount;
+
+      updates.finalPrice = Math.round(newPrice - (newPrice * newDiscount) / 100);
+    }
+
+    // handle delete images
     let currentImages = [...product.images];
     if (deleteImages) {
       const idsToDelete = Array.isArray(deleteImages) ? deleteImages : [deleteImages];
       for (const imgId of idsToDelete) {
         const img = currentImages.find((i) => i._id.toString() === imgId);
         if (img?.public_id) {
-          await deleteFromCloudinary(img.public_id).catch((err) =>
-            console.warn('Cloudinary delete skipped:', err.message)
-          );
+          await deleteFromCloudinary(img.public_id).catch(() => {});
         }
         currentImages = currentImages.filter((i) => i._id.toString() !== imgId);
       }
     }
 
-    // Upload any new images and append to the (possibly trimmed) current list
     if (req.files && req.files.length > 0) {
       const newImages = [];
       for (const file of req.files) {
@@ -170,7 +181,6 @@ const updateProduct = async (req, res, next) => {
       currentImages = [...currentImages, ...newImages];
     }
 
-    // Always persist the final image list if changes were made
     if (deleteImages || (req.files && req.files.length > 0)) {
       updates.images = currentImages;
     }
@@ -186,17 +196,14 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
-// @desc    Delete product (Admin)
+// @desc    Delete product
 // @route   DELETE /api/products/:id
 // @access  Admin
 const deleteProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
-    // Delete all images from Cloudinary
     for (const img of product.images) {
       await deleteFromCloudinary(img.public_id);
     }
@@ -208,20 +215,16 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-// @desc    Delete a product image (Admin)
+// @desc    Delete product image
 // @route   DELETE /api/products/:id/images/:imageId
 // @access  Admin
 const deleteProductImage = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
     const image = product.images.id(req.params.imageId);
-    if (!image) {
-      return res.status(404).json({ success: false, message: 'Image not found' });
-    }
+    if (!image) return res.status(404).json({ success: false, message: 'Image not found' });
 
     await deleteFromCloudinary(image.public_id);
     product.images.pull(req.params.imageId);
@@ -233,7 +236,7 @@ const deleteProductImage = async (req, res, next) => {
   }
 };
 
-// @desc    Add product review
+// @desc    Add review
 // @route   POST /api/products/:id/reviews
 // @access  Private
 const addReview = async (req, res, next) => {
@@ -241,9 +244,7 @@ const addReview = async (req, res, next) => {
     const { rating, comment } = req.body;
     const product = await Product.findById(req.params.id);
 
-    if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
     const alreadyReviewed = product.reviews.find(
       (r) => r.user.toString() === req.user._id.toString()
@@ -258,6 +259,7 @@ const addReview = async (req, res, next) => {
       rating: Number(rating),
       comment,
     });
+
     product.numReviews = product.reviews.length;
     product.rating =
       product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length;

@@ -1,32 +1,44 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const discountedPrice = product.price - (product.price * product.discount) / 100;
+  // ✅ Use finalPrice safely, fallback to price if undefined
+  const finalPrice =
+    product.finalPrice !== undefined && product.finalPrice !== null
+      ? product.finalPrice
+      : product.price;
+
   const imageUrl = product.images?.[0]?.url
-    ? product.images[0].url.startsWith('http')
+    ? product.images[0].url.startsWith("http")
       ? product.images[0].url
       : `${API_URL}${product.images[0].url}`
     : null;
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    if (!user) { navigate('/login'); return; }
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     addToCart(product._id);
   };
 
   return (
-    <Link to={`/products/${product._id}`} className="card-hover group flex flex-col">
+    <Link
+      to={`/products/${product._id}`}
+      className="card-hover group flex flex-col"
+    >
       {/* Image */}
       <div className="relative overflow-hidden aspect-square bg-[var(--vg-gray)]">
         {imageUrl ? (
@@ -49,7 +61,9 @@ export default function ProductCard({ product }) {
         )}
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-            <span className="badge badge-black px-3 py-1.5 text-[10px]">Sold Out</span>
+            <span className="badge badge-black px-3 py-1.5 text-[10px]">
+              Sold Out
+            </span>
           </div>
         )}
 
@@ -67,15 +81,23 @@ export default function ProductCard({ product }) {
 
       {/* Info */}
       <div className="pt-3 pb-1 px-0">
-        <p className="text-[10px] text-[var(--vg-muted)] uppercase tracking-[0.2em] mb-1">{product.category}</p>
+        <p className="text-[10px] text-[var(--vg-muted)] uppercase tracking-[0.2em] mb-1">
+          {product.category}
+        </p>
         <h3 className="text-[12px] font-bold text-[var(--vg-black)] uppercase tracking-[0.12em] leading-snug line-clamp-2 group-hover:text-[var(--vg-red)] transition-colors">
           {product.name}
         </h3>
         <div className="flex items-center gap-2 mt-1.5">
-          {product.discount > 0 && (
-            <span className="text-[11px] text-[var(--vg-muted)] line-through">₹{product.price.toLocaleString('en-IN')}</span>
+          {/* Show original price only if discount exists */}
+          {product.discount > 0 && product.price && (
+            <span className="text-[11px] text-[var(--vg-muted)] line-through">
+              ₹{product.price.toLocaleString("en-IN")}
+            </span>
           )}
-          <span className="text-[13px] font-bold text-[var(--vg-black)]">₹{discountedPrice.toLocaleString('en-IN')}</span>
+
+          <span className="text-[13px] font-bold text-[var(--vg-black)]">
+            ₹{finalPrice.toLocaleString("en-IN")}
+          </span>
         </div>
       </div>
     </Link>

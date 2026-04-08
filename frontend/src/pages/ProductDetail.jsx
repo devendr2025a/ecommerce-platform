@@ -32,7 +32,9 @@ export default function ProductDetail() {
   if (loading) return <Loading />;
   if (!product) return null;
 
-  const discountedPrice = product.price - (product.price * product.discount) / 100;
+  const discountedPrice = product.finalPrice ?? product.price;
+
+
   const getImageUrl = (url) => url?.startsWith('http') ? url : `${API_URL}${url}`;
 
   const handleAddToCart = () => {
