@@ -43,6 +43,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from public folder
+app.use('/public', express.static('public'));
+// Serve uploaded images
+app.use('/uploads', express.static('uploads'));
+
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }

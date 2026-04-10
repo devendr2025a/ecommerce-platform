@@ -517,9 +517,13 @@ const seedProducts = async () => {
       const { photos: _photos, ...productData } = p;
       const rating = parseFloat((4.0 + Math.random() * 0.9).toFixed(1));
       const numReviews = Math.floor(50 + Math.random() * 500);
+      
+      // Calculate finalPrice
+      const finalPrice = productData.price - (productData.price * productData.discount / 100);
 
       const product = await Product.create({
         ...productData,
+        finalPrice,
         images,
         rating,
         numReviews,

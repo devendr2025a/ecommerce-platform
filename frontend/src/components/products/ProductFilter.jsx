@@ -2,9 +2,12 @@ import React from 'react';
 import { Search, X } from 'lucide-react';
 
 const CATEGORIES = [
-  "Silk Sarees", '100% Cotton Kurtas', 'Chikankari Suits', 'Ethnic Wear', 
-   'Accessories',  
-  , 'Linen Shirts & Pants', 'Pashmina Stoles' ,'Dupatta','Caps','T-Shirts','Socks','Napkins'
+  "Silk Sarees",
+  '100% Cotton Kurtas',
+  'Chikankari Suits',
+  'Pashmina Shawls',
+  'Linen Shirts & Pants',
+  'Accessories'
 ];
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];

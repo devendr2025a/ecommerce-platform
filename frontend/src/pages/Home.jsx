@@ -46,16 +46,16 @@ const WHY_CHOOSE = [
 
 const CATEGORIES = [
   {
-    name: "Women's Wear",
-    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=700&fit=crop",
+    name: "chikankari suit",
+    img: "https://i.etsystatic.com/25343224/r/il/60e9ab/5894597556/il_570xN.5894597556_g0oc.jpg",
   },
   {
-    name: "Men's Wear",
-    img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+    name: "cotton kurta",
+    img: "https://5.imimg.com/data5/SELLER/Default/2022/8/OU/CF/NF/74166486/party-wear-male-female-kurta-pajama-combo-500x500.jpeg",
   },
   {
-    name: "Ethnic Wear",
-    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=700&fit=crop",
+    name: "silk sarees",
+    img: "https://m.media-amazon.com/images/I/717FRfcyG-L._AC_UY1100_.jpg",
   },
   {
     name: "Accessories",
@@ -119,8 +119,9 @@ export default function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               <ProductSkeleton count={8} />
             </div>
-          ) : featured.length > 0 ? (
+          ) : featured?.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+              
               {featured.map((p) => (
                 <ProductCard key={p._id} product={p} />
               ))}

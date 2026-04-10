@@ -41,6 +41,18 @@ const productSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
+// Auto-calculate finalPrice before saving (rounded)
+productSchema.pre('save', function(next) {
+  if (this.price) {
+    if (this.discount && this.discount > 0) {
+      this.finalPrice = Math.round(this.price - (this.price * this.discount / 100));
+    } else {
+      this.finalPrice = Math.round(this.price);
+    }
+  }
+  next();
+});
+
 productSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model("Product", productSchema);
