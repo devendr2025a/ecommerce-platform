@@ -18,7 +18,7 @@ const paymentRoutes = require("./src/routes/payments.js");
 const adminRoutes = require("./src/routes/admin.js");
 
 // Connect DB
-connectDB();
+connectDB().catch(err => console.error("MongoDB Connection Error:", err.message));
 
 const app = express();
 
@@ -90,10 +90,12 @@ app.use("*", (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
-});
+// Start server (only locally)
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
