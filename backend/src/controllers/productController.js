@@ -1,9 +1,9 @@
-import Product from "../models/Product.js";
 
 // -----------------------------------------
 // CREATE PRODUCT
+const Product = require("../models/Product");
 // -----------------------------------------
-export const createProduct = async (req, res) => {
+const createProduct = async (req, res) => {
   try {
     console.log("FILES:", req.files);
     console.log("BODY:", req.body);
@@ -41,12 +41,8 @@ export const createProduct = async (req, res) => {
 
     if (req.files && req.files.length > 0) {
       imagesArray = req.files.map((file) => ({
-        url: `/uploads/${file.filename}`,
+        url: file.path || file.secure_url || "",
       }));
-    } else if (images) {
-      imagesArray = Array.isArray(images)
-        ? images.map((img) => ({ url: img }))
-        : [{ url: images }];
     }
 
     const newProduct = new Product({
@@ -85,7 +81,7 @@ export const createProduct = async (req, res) => {
 // -----------------------------------------
 // UPDATE PRODUCT
 // -----------------------------------------
-export const updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -120,7 +116,7 @@ export const updateProduct = async (req, res) => {
 // -----------------------------------------
 // GET ALL PRODUCTS
 // -----------------------------------------
-export const getProducts = async (req, res) => {
+const getProducts = async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
 
@@ -142,7 +138,7 @@ export const getProducts = async (req, res) => {
 // -----------------------------------------
 // GET SINGLE PRODUCT
 // -----------------------------------------
-export const getProduct = async (req, res) => {
+const getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Not found" });
@@ -156,7 +152,7 @@ export const getProduct = async (req, res) => {
 // -----------------------------------------
 // DELETE PRODUCT
 // -----------------------------------------
-export const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted successfully" });
@@ -166,7 +162,7 @@ export const deleteProduct = async (req, res) => {
 };
 
 // --------------image ---------------------------
-export const deleteProductImage = async (req, res) => {
+const deleteProductImage = async (req, res) => {
   try {
     const { id, imageId } = req.params;
 
@@ -198,7 +194,7 @@ export const deleteProductImage = async (req, res) => {
 // -----------------------------------------
 // ADD REVIEW
 // -----------------------------------------
-export const addReview = async (req, res) => {
+const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const product = await Product.findById(req.params.id);
@@ -235,4 +231,14 @@ export const addReview = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error adding review", error });
   }
+};
+
+module.exports = {
+  createProduct,
+  updateProduct,
+  getProducts,
+  getProduct,
+  deleteProduct,
+  deleteProductImage,
+  addReview,
 };

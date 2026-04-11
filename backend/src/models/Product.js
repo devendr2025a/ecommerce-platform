@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Auto-calculate finalPrice before saving (rounded)
-productSchema.pre('save', function(next) {
+productSchema.pre('save', function (next) {
   if (this.price) {
     if (this.discount && this.discount > 0) {
       this.finalPrice = Math.round(this.price - (this.price * this.discount / 100));

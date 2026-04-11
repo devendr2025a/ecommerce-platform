@@ -9,10 +9,10 @@ const {
   deleteProduct,
   deleteProductImage,
   addReview,
-} = require("../controllers/productController");
+} = require("../controllers/productController.js");
 
-const { protect, adminOnly } = require("../middleware/auth");
-const upload = require("../middleware/upload");
+const { protect, adminOnly } = require("../middleware/auth.js");
+const upload = require("../middleware/upload.js");
 
 router.get("/", getProducts);
 router.get("/:id", getProduct);
