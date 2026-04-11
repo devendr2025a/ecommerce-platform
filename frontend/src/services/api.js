@@ -5,14 +5,19 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor — attach access token
 api.interceptors.request.use((config) => {
   console.log(`[API Request] ${config.method?.toUpperCase()} ${config.baseURL || ''}${config.url || ''}`, config.data || '');
   const token = localStorage.getItem('accessToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  
+  if (!(config.data instanceof FormData)) {
+    config.headers['Content-Type'] = 'application/json';
+  } else {
+    delete config.headers['Content-Type'];
+  }
+  
   return config;
 });
 

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+dotenv.config();
 
 const connectDB = require("./src/config/db.js");
 const errorHandler = require("./src/middleware/errorHandler.js");
@@ -15,8 +16,6 @@ const orderRoutes = require("./src/routes/orders.js");
 const addressRoutes = require("./src/routes/addresses.js");
 const paymentRoutes = require("./src/routes/payments.js");
 const adminRoutes = require("./src/routes/admin.js");
-
-dotenv.config();
 
 // Connect DB
 connectDB();

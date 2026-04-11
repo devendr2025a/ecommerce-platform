@@ -2,6 +2,7 @@
 // -----------------------------------------
 // CREATE PRODUCT
 const Product = require("../models/Product");
+const { uploadToCloudinary, deleteFromCloudinary } = require("../config/cloudinary");
 // -----------------------------------------
 const createProduct = async (req, res) => {
   try {
@@ -40,9 +41,14 @@ const createProduct = async (req, res) => {
     let imagesArray = [];
 
     if (req.files && req.files.length > 0) {
-      imagesArray = req.files.map((file) => ({
-        url: file.path || file.secure_url || "",
-      }));
+      for (const file of req.files) {
+        // Upload buffer from memory storage to Cloudinary
+        const result = await uploadToCloudinary(file.buffer, 'ecommerce/products');
+        imagesArray.push({
+          url: result.url,
+          public_id: result.public_id
+        });
+      }
     }
 
     const newProduct = new Product({
@@ -88,6 +94,30 @@ const updateProduct = async (req, res) => {
 
     const product = await Product.findById(id);
     if (!product) return res.status(404).json({ message: "Product not found" });
+
+    // Handle new images & deletions
+    let currentImages = [...product.images];
+    if (updates.deleteImages) {
+      const deleteIds = Array.isArray(updates.deleteImages) ? updates.deleteImages : [updates.deleteImages];
+      for (const delId of deleteIds) {
+        const imgToDelete = currentImages.find(img => String(img._id) === String(delId));
+        if (imgToDelete && imgToDelete.public_id) {
+          await deleteFromCloudinary(imgToDelete.public_id);
+        }
+      }
+      currentImages = currentImages.filter(img => !deleteIds.includes(String(img._id)));
+    }
+
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await uploadToCloudinary(file.buffer, 'ecommerce/products');
+        currentImages.push({
+          url: result.url,
+          public_id: result.public_id
+        });
+      }
+    }
+    updates.images = currentImages;
 
     if (updates.price !== undefined || updates.discount !== undefined) {
       const newPrice =
@@ -154,6 +184,13 @@ const getProduct = async (req, res) => {
 // -----------------------------------------
 const deleteProduct = async (req, res) => {
   try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    
+    for (const img of product.images) {
+      if (img.public_id) await deleteFromCloudinary(img.public_id);
+    }
+    
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
@@ -169,6 +206,11 @@ const deleteProductImage = async (req, res) => {
     const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    const imgToDelete = product.images.find((img) => img._id.toString() === imageId);
+    if (imgToDelete && imgToDelete.public_id) {
+      await deleteFromCloudinary(imgToDelete.public_id);
     }
 
     product.images = product.images.filter(
