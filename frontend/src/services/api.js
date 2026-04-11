@@ -1,17 +1,23 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api'
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor — attach access token
 api.interceptors.request.use((config) => {
+  console.log(`[API Request] ${config.method?.toUpperCase()} ${config.baseURL || ''}${config.url || ''}`, config.data || '');
   const token = localStorage.getItem('accessToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  
+  if (!(config.data instanceof FormData)) {
+    config.headers['Content-Type'] = 'application/json';
+  } else {
+    delete config.headers['Content-Type'];
+  }
+  
   return config;
 });
 
@@ -28,8 +34,12 @@ const processQueue = (error, token = null) => {
 };
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`[API Response] ${response.status} ${response.config?.baseURL || ''}${response.config?.url || ''}`, response.data);
+    return response;
+  },
   async (error) => {
+    console.log(`[API Error] ${error.response?.status || 'Unknown'} ${error.config?.baseURL || ''}${error.config?.url || ''}`, error.response?.data || error.message);
     const original = error.config;
 
     if (
@@ -96,8 +106,8 @@ export const userAPI = {
 export const productAPI = {
   getAll: (params) => api.get('/products', { params }),
   getOne: (id) => api.get(`/products/${id}`),
-  create: (data) => api.post('/products', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  update: (id, data) => api.put(`/products/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  create: (data) => api.post('/products', data),
+  update: (id, data) => api.put(`/products/${id}`, data),
   delete: (id) => api.delete(`/products/${id}`),
   deleteImage: (id, imageId) => api.delete(`/products/${id}/images/${imageId}`),
   addReview: (id, data) => api.post(`/products/${id}/reviews`, data),

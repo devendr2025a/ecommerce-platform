@@ -1,0 +1,82 @@
+{
+  "kurta-1.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714267/ecommerce/products/kurta-1.jpg",
+    "public_id": "ecommerce/products/kurta-1",
+    "name": "Premium White Cotton Kurta"
+  },
+  "kurta-2.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714268/ecommerce/products/kurta-2.jpg",
+    "public_id": "ecommerce/products/kurta-2",
+    "name": "Maroon Pure Cotton Kurta"
+  },
+  "kurta-3.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714270/ecommerce/products/kurta-3.jpg",
+    "public_id": "ecommerce/products/kurta-3",
+    "name": "Navy Blue Cotton Kurta"
+  },
+  "kurta-4.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714278/ecommerce/products/kurta-4.jpg",
+    "public_id": "ecommerce/products/kurta-4",
+    "name": "Beige Plain Cotton Kurta"
+  },
+  "kurta-5.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714281/ecommerce/products/kurta-5.jpg",
+    "public_id": "ecommerce/products/kurta-5",
+    "name": "Green Printed Cotton Kurta"
+  },
+  "product.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714282/ecommerce/products/product.jpg",
+    "public_id": "ecommerce/products/product",
+    "name": "Generic Product"
+  },
+  "saree-1.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714500/ecommerce/products/sarees/saree-1.jpg",
+    "public_id": "ecommerce/products/sarees/saree-1",
+    "name": "Gold Silk Saree"
+  },
+  "saree-2.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714502/ecommerce/products/sarees/saree-2.jpg",
+    "public_id": "ecommerce/products/sarees/saree-2",
+    "name": "Maroon Silk Saree with Border"
+  },
+  "saree-3.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714504/ecommerce/products/sarees/saree-3.jpg",
+    "public_id": "ecommerce/products/sarees/saree-3",
+    "name": "Deep Red Banarasi Silk Saree"
+  },
+  "saree-4.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714506/ecommerce/products/sarees/saree-4.jpg",
+    "public_id": "ecommerce/products/sarees/saree-4",
+    "name": "Emerald Green Silk Saree"
+  },
+  "saree-5.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775714507/ecommerce/products/sarees/saree-5.jpg",
+    "public_id": "ecommerce/products/sarees/saree-5",
+    "name": "Royal Blue Silk Saree Premium"
+  },
+  "chikankari-1.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775715485/ecommerce/products/chikankari/chikankari-1.jpg",
+    "public_id": "ecommerce/products/chikankari/chikankari-1",
+    "name": "White Chikankari Suit Set"
+  },
+  "chikankari-2.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775715488/ecommerce/products/chikankari/chikankari-2.jpg",
+    "public_id": "ecommerce/products/chikankari/chikankari-2",
+    "name": "Cream Chikankari Kurta Palazzo"
+  },
+  "chikankari-3.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775715490/ecommerce/products/chikankari/chikankari-3.jpg",
+    "public_id": "ecommerce/products/chikankari/chikankari-3",
+    "name": "Beige Chikankari Designer Suit"
+  },
+  "chikankari-4.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775715492/ecommerce/products/chikankari/chikankari-4.jpg",
+    "public_id": "ecommerce/products/chikankari/chikankari-4",
+    "name": "Peach Chikankari Formal Suit"
+  },
+  "chikankari-5.webp": {
+    "url": "https://res.cloudinary.com/ddixgkvso/image/upload/v1775715494/ecommerce/products/chikankari/chikankari-5.jpg",
+    "public_id": "ecommerce/products/chikankari/chikankari-5",
+    "name": "Ivory Chikankari Premium Set"
+  }
+}

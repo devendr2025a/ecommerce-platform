@@ -22,7 +22,7 @@ export default function AdminLayout({ children }) {
   const Sidebar = ({ mobile = false }) => (
     <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
       <div className="flex items-center gap-2 p-6 border-b border-gray-700">
-        <ShoppingCart className="h-6 w-6 text-blue-400" />
+        <ShoppingCart className="h-6 w-6 text-red-400" />
         <span className="text-white font-bold text-lg">Admin Panel</span>
       </div>
       <nav className="flex-1 p-4 space-y-1">
@@ -33,7 +33,7 @@ export default function AdminLayout({ children }) {
             onClick={() => mobile && setSidebarOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium ${
               location.pathname === to
-                ? 'bg-blue-600 text-white'
+                ? 'bg-red-600 text-white'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white'
             }`}
           >
@@ -46,7 +46,7 @@ export default function AdminLayout({ children }) {
         <Link to="/" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white text-sm mb-1">
           <ShoppingBag className="h-4 w-4" /> View Store
         </Link>
-        <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 text-red-400 hover:text-red-300 w-full text-sm">
+        <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 text-red-400 hover:text-red-500 w-full text-sm">
           <LogOut className="h-4 w-4" /> Logout
         </button>
       </div>
@@ -56,7 +56,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex bg-gray-900 w-64 flex-shrink-0 flex-col">
+      <aside className="hidden md:flex bg-black w-64 flex-shrink-0 flex-col">
         <Sidebar />
       </aside>
 

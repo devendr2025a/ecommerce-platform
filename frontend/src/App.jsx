@@ -38,6 +38,7 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminLayout from './components/admin/AdminLayout';
+import Sale from './pages/Sale';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -100,6 +101,7 @@ const AppRoutes = () => (
     <Route path="/return" element={<AppLayout><ReturnPolicy /></AppLayout>} />
     <Route path="/disclaimer" element={<AppLayout><Disclaimer /></AppLayout>} />
     <Route path="/track-order" element={<AppLayout><TrackOrder /></AppLayout>} />
+    <Route path= "/Wholesale" element={<AppLayout><Sale/></AppLayout>}/>
 
     {/* Private */}
     <Route path="/cart" element={<PrivateRoute><AppLayout><Cart /></AppLayout></PrivateRoute>} />
