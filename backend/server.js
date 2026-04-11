@@ -36,7 +36,7 @@ if (process.env.CLIENT_URL) {
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: process.env.NODE_ENV === "development" ? true : allowedOrigins,
     credentials: true,
   })
 );
