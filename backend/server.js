@@ -18,7 +18,7 @@ const paymentRoutes = require("./src/routes/payments.js");
 const adminRoutes = require("./src/routes/admin.js");
 
 // Connect DB
-connectDB();
+connectDB().catch(err => console.error("MongoDB Connection Error:", err.message));
 
 const app = express();
 
@@ -36,16 +36,7 @@ if (process.env.CLIENT_URL) {
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === "development") {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
-    },
+    origin: process.env.NODE_ENV === "development" ? true : allowedOrigins,
     credentials: true,
   })
 );
@@ -99,10 +90,12 @@ app.use("*", (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
-});
+// Start server (only locally)
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;

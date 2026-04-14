@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
-
+// Resolve user dashboard issues
 // Layouts & common
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
