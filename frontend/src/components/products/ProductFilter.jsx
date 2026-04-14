@@ -2,10 +2,10 @@ import React from 'react';
 import { Search, X } from 'lucide-react';
 
 const CATEGORIES = [
-  "Silk Sarees",
+  "Silk Sarees", // silk sarees
   '100% Cotton Kurtas',
   'Chikankari Suits',
-  'Pashmina Shawls',
+  'Pashmina Shwal',
   'Linen Shirts & Pants',
   'Accessories'
 ];
