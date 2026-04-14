@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 const SLIDES = [
   {
     id: 1,
-    image: '/assets/hero-campaign.png',
+    image: '/assets/indian.webp',
     tag: 'New Collection',
     title: 'Quality Products. Trusted Delivery.',
     subtitle: 'Premium fashion, curated and quality-checked. Delivered fast across India.',
@@ -16,7 +16,7 @@ const SLIDES = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1400&h=800&fit=crop&q=90',
+    image: 'https://static.vecteezy.com/system/resources/thumbnails/049/099/130/small/colorful-outfits-hang-elegantly-reflecting-rich-cultural-craftsmanship-and-design-photo.jpeg',
     tag: 'Best Sellers',
     title: 'Elevated Essentials For You.',
     subtitle: 'Timeless design meets modern craftsmanship — curated for the everyday you.',

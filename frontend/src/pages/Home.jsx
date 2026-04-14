@@ -59,7 +59,7 @@ const CATEGORIES = [
   },
   {
     name: "Accessories",
-    img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=700&fit=crop",
+    img: "https://panaxmart.com/cdn/shop/articles/Jewelry-laydown-two.jpg?v=1695801014",
   },
 ];
 
@@ -194,7 +194,7 @@ export default function Home() {
                 Always.
               </h2>
               <p className="text-[var(--vg-muted)] text-sm leading-relaxed">
-                Avrotide is built on a single promise — quality you can feel.
+                Avrotide is built on a single promise quality you can feel.
                 Every product we carry is hand-selected, quality-checked, and
                 delivered with care. We believe style shouldn't cost trust.
               </p>

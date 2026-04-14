@@ -335,7 +335,7 @@ export default function ProductDetail() {
               <button
                 onClick={() => {
                   setShowThankYouModal(false);
-                  navigate("/products");
+                  navigate("/product");
                 }}
                 className="flex-1 btn-primary py-3 text-[11px]"
               >

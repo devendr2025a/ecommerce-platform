@@ -99,7 +99,7 @@ export default function HowItWorks() {
                 Shop Now <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden ">
               <img
                 src="https://images.unsplash.com/photo-1544441893-675973e31985?w=900&h=1100&fit=crop&q=90"
                 alt="Quality Inspection"
