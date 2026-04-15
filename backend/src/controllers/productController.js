@@ -235,14 +235,31 @@ const deleteProductImage = async (req, res) => {
 
 // -----------------------------------------
 // ADD REVIEW
-// -----------------------------------------
+ 
 const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
+    
+    // 🔥 YEH ADD KARO - Validation check
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ 
+        message: "Rating must be between 1 and 5" 
+      });
+    }
+    
+    if (!comment || comment.trim() === '') {
+      return res.status(400).json({ 
+        message: "Comment is required" 
+      });
+    }
+    
     const product = await Product.findById(req.params.id);
+    
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-    if (!product) return res.status(404).json({ message: "Product not found" });
-
+    // Check if user already reviewed
     const alreadyReviewed = product.reviews.find(
       (r) => r.user.toString() === req.user._id.toString(),
     );
@@ -257,7 +274,7 @@ const addReview = async (req, res) => {
       user: req.user._id,
       name: req.user.name,
       rating: Number(rating),
-      comment,
+      comment: comment.trim(), // Trim the comment
     };
 
     product.reviews.push(review);
@@ -269,9 +286,19 @@ const addReview = async (req, res) => {
 
     await product.save();
 
-    res.status(201).json({ message: "Review added successfully" });
+    // 🔥 YEH BHI ADD KARO - Return the updated product
+    res.status(201).json({ 
+      message: "Review added successfully",
+      success: true,
+      product: product // Return updated product
+    });
+    
   } catch (error) {
-    res.status(500).json({ message: "Error adding review", error });
+    console.error("Add review error:", error);
+    res.status(500).json({ 
+      message: "Error adding review", 
+      error: error.message 
+    });
   }
 };
 
