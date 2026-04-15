@@ -11,8 +11,8 @@ const CATEGORIES = [
 ];
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-const MATERIALS = ['Cotton', 'Linen', 'Silk', 'Denim', 'Wool', 'Synthetic'];
-const OCCASIONS = ['Casual', 'Formal', 'Party', 'Ethnic', 'Sport'];
+const MATERIALS = ['Cotton', 'Linen', 'Silk Sarees', 'Pashmina Shwal',  'Chikankari Suits','Accessories'];
+const OCCASIONS = ['Festival', 'Formal',  'Ethnic','Accessories'];
 
 export default function ProductFilter({ filters, onChange, onReset }) {
   const handleChange = (key, value) => onChange({ ...filters, [key]: value, page: 1 });
