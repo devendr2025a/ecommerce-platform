@@ -42,6 +42,7 @@ export default function Footer() {
       <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-4">
             <Link to="/" className="inline-block">
@@ -82,8 +83,7 @@ export default function Footer() {
               <div className="flex items-center gap-2 group">
                 <FileText className="h-3.5 w-3.5 text-gray-500 flex-shrink-0 group-hover:text-[var(--vg-red)] transition-colors" />
                 <p className="text-[11px] text-gray-500 group-hover:text-gray-400 transition-colors">
-                  <span className="text-gray-600">CIN:</span>{" "}
-                  U61900UP2023PTC194089
+                  <span className="text-gray-600">CIN:</span> U61900UP2023PTC194089
                 </p>
               </div>
             </div>
@@ -126,11 +126,18 @@ export default function Footer() {
                 <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400 mb-3 hover:text-white transition-colors">
                   {title}
                 </h4>
+
                 <ul className="space-y-2">
                   {links.map(({ label, to }) => (
                     <li key={label}>
                       <Link
                         to={to}
+                        onClick={() => {
+                          window.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                          });
+                        }}
                         className="text-[11px] text-gray-500 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block"
                       >
                         {label}
@@ -138,13 +145,15 @@ export default function Footer() {
                     </li>
                   ))}
                 </ul>
+
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom Bar - Gap Kam Kiya */}
+        {/* Bottom Bar */}
         <div className="mt-8 pt-5 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
+          
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
             <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
@@ -169,6 +178,7 @@ export default function Footer() {
             />
           </div>
         </div>
+
       </div>
     </footer>
   );

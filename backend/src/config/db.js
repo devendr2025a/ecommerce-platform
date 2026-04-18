@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const dns = require("dns");
+
+// Fix for strict Wi-Fi or ISP DNS (IPv6) blocking SRV queries in Node.js
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const connectDB = async () => {
   try {
@@ -6,6 +10,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
+      family: 4 // Force IPv4 to bypass 'querySrv ECONNREFUSED' issues on some Wi-Fi
     });
 
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
