@@ -12,6 +12,8 @@ import { productAPI } from "../services/api";
 import ProductCard from "../components/products/ProductCard";
 import ProductSkeleton from "../components/products/ProductSkeleton";
 import HeroBanner from "../components/common/HeroBanner";
+import ShopGallery from "../components/common/ShopGallery";
+
 
 const TRUST_PILLARS = [
   {
@@ -254,6 +256,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+     <ShopGallery/>
 
       {/* ── Final CTA ── */}
       <section className="bg-[var(--vg-black)] text-white py-14 sm:py-20 px-4 sm:px-6 text-center">
