@@ -65,7 +65,7 @@ export default function ShopGallery() {
           >
             <div className="flex items-center justify-between max-w-md mx-auto border-b-2 border-[var(--vg-border)] pb-4 hover:border-[var(--vg-red)] transition-all">
               <h2 className="text-2xl font-black text-[var(--vg-black)] uppercase tracking-[0.08em] flex items-center gap-2">
-                <span>🏪</span> Our Shop Gallery
+                <span></span> Our Shop Gallery
               </h2>
               <ChevronDown 
                 className={`h-5 w-5 text-[var(--vg-muted)] transition-transform duration-300 ${
