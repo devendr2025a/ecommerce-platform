@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 const CONTACTS = [
   { icon: Mail, label: 'Email Us', value: 'Avrotidesolutions@gmail.com', href: 'mailto:Avrotidesolutions@gmail.com' },
-  { icon: Phone, label: 'Call Us', value: '+91 73883 30600', href: 'tel:+917388330600' },
+  { icon: Phone, label: 'Call Us', value: '+91 9450782400', href: 'tel:+919450782400' },
   { icon: MapPin, label: 'Office', value: 'India', href: null },
 ];
 
@@ -63,7 +63,7 @@ export default function Contact() {
 
               {/* WhatsApp CTA */}
               <a
-                href="https://wa.me/917388330600"
+                href="https://wa.me/9450782400"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full border border-[var(--vg-border)] py-3.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--vg-muted)] hover:text-[var(--vg-red)] hover:border-[var(--vg-red)] transition-all"
