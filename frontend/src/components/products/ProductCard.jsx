@@ -40,12 +40,12 @@ export default function ProductCard({ product }) {
       className="card-hover group flex flex-col"
     >
       {/* Image */}
-      <div className="relative overflow-hidden aspect-square bg-[var(--vg-gray)]">
+      <div className="relative aspect-square bg-[var(--vg-gray)] flex items-center justify-center overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+            className="max-h-full max-w-full object-contain group-hover:scale-95 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300">
@@ -59,6 +59,7 @@ export default function ProductCard({ product }) {
             SALE –{product.discount}%
           </span>
         )}
+
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
             <span className="badge badge-black px-3 py-1.5 text-[10px]">
@@ -72,8 +73,8 @@ export default function ProductCard({ product }) {
           onClick={handleAddToCart}
           disabled={product.stock === 0}
           className="absolute bottom-0 left-0 right-0 bg-[var(--vg-black)] text-white text-[10px]
-                     font-bold uppercase tracking-[0.25em] py-2.5 opacity-0 group-hover:opacity-100
-                     transition-opacity duration-200 disabled:hidden"
+               font-bold uppercase tracking-[0.25em] py-2.5 opacity-0 group-hover:opacity-100
+               transition-opacity duration-200 disabled:hidden"
         >
           Add to Cart
         </button>
