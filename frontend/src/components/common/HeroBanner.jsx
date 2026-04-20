@@ -13,7 +13,6 @@ const SLIDES = [
     cta: "Shop Now",
     link: "/products",
     ctaSecondary: "Explore Collection",
-    overlay: "from-black/70 via-black/30 to-transparent",
   },
   {
     id: 2,
@@ -26,7 +25,6 @@ const SLIDES = [
     cta: "Shop Now",
     link: "/products",
     ctaSecondary: "View Collection",
-    overlay: "from-black/70 via-black/30 to-transparent",
   },
 ];
 
@@ -65,7 +63,7 @@ export default function HeroBanner() {
 
   return (
     <div
-      className="relative w-full overflow-hidden select-none bg-black"
+      className="relative w-full overflow-hidden select-none"
       style={{ height: "clamp(420px, 70vh, 800px)" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -76,59 +74,46 @@ export default function HeroBanner() {
           animating ? "opacity-90" : "opacity-100"
         }`}
       >
-        {/* 🔥 IMAGE FIX START */}
-        <div className="absolute inset-0 overflow-hidden">
-          
-          {/* Blur Background */}
-          <div
-            className="absolute inset-0 scale-105 blur-lg"
-            style={{
-              backgroundImage: `url(${slide.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
-
-          {/* Main Image (No Cut) */}
-          <div
-            className="relative w-full h-full bg-no-repeat bg-center"
-            style={{
-              backgroundImage: `url(${slide.image})`,
-              backgroundSize: "contain",
-            }}
-          />
-        </div>
-        {/* 🔥 IMAGE FIX END */}
-
-        {/* Overlay */}
+        {/* IMAGE - Full Fill, No Black Space, Face Centered */}
         <div
-          className={`absolute inset-0 bg-gradient-to-r ${slide.overlay}`}
+          className="absolute inset-0 w-full h-full bg-no-repeat"
+          style={{
+            backgroundImage: `url(${slide.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center 16%", // 0% from top - face usually yahi hota hai
+          }}
         />
 
+        {/* Dark Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 md:bg-gradient-to-r md:from-black/80 md:via-black/50 md:to-transparent" />
+
         {/* Content */}
-        <div className="absolute inset-0 flex items-end sm:items-center">
-          <div className="max-w-[1500px] mx-auto px-5 sm:px-6 lg:px-10 w-full pb-10 sm:pb-0">
-            <div className="max-w-xl space-y-3 sm:space-y-5">
-              <span className="inline-block text-[10px] sm:text-[11px] font-bold tracking-[0.3em] sm:tracking-[0.35em] text-[var(--vg-red)] uppercase">
+        <div className="absolute inset-0 flex items-end md:items-center">
+          <div className="max-w-[1500px] mx-auto px-5 sm:px-6 lg:px-10 w-full pb-8 sm:pb-10 md:pb-0">
+            <div className="max-w-xl space-y-2 sm:space-y-3 md:space-y-5">
+              <span className="inline-block text-[10px] sm:text-[11px] font-bold tracking-[0.3em] sm:tracking-[0.35em] text-red-500 uppercase">
                 {slide.tag}
               </span>
 
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight sm:leading-none uppercase">
+              <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight sm:leading-none uppercase">
                 {slide.title}
               </h1>
 
-              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed max-w-sm sm:max-w-md hidden sm:block">
+              <p className="text-gray-200 text-xs sm:text-sm leading-relaxed max-w-sm hidden sm:block">
                 {slide.subtitle}
               </p>
 
               <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 pt-1 sm:pt-2">
-                <Link to={slide.link} className="btn-primary text-center">
-                  {slide.cta} <ArrowRight className="h-3.5 w-3.5" />
+                <Link
+                  to={slide.link}
+                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[11px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] transition-colors"
+                >
+                  {slide.cta} <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 </Link>
 
                 <Link
                   to="/products"
-                  className="hidden sm:inline-flex items-center gap-2 bg-transparent text-white border border-white/60 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.25em] hover:bg-white hover:text-black transition-colors"
+                  className="hidden sm:inline-flex items-center justify-center gap-2 bg-transparent text-white border border-white/60 px-7 py-3 text-[11px] font-bold uppercase tracking-[0.25em] hover:bg-white hover:text-black transition-colors"
                 >
                   {slide.ctaSecondary}
                 </Link>
@@ -138,31 +123,31 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Arrows */}
+      {/* Navigation Arrows - Desktop Only */}
       <button
         onClick={back}
-        className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/90 items-center justify-center group"
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/90 items-center justify-center group transition-all"
       >
         <ChevronLeft className="h-5 w-5 text-white group-hover:text-black" />
       </button>
 
       <button
         onClick={next}
-        className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/90 items-center justify-center group"
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/90 items-center justify-center group transition-all"
       >
         <ChevronRight className="h-5 w-5 text-white group-hover:text-black" />
       </button>
 
-      {/* Dots */}
-      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        {SLIDES.map((s, i) => (
+      {/* Dots Indicator */}
+      <div className="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
+        {SLIDES.map((_, i) => (
           <button
-            key={s.id}
+            key={i}
             onClick={() => goTo(i)}
             className={`h-[2px] transition-all duration-500 ${
               i === current
-                ? "w-8 sm:w-12 bg-white"
-                : "w-4 sm:w-6 bg-white/30"
+                ? "w-6 sm:w-8 md:w-12 bg-white"
+                : "w-3 sm:w-4 md:w-6 bg-white/40"
             }`}
           />
         ))}
