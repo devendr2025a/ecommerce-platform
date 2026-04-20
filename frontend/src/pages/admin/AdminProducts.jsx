@@ -21,7 +21,6 @@
     "Silk Sarees",
     "100% Cotton Kurtas",
     "Chikankari Suits",
-    "Ethnic Wear",
     "Linen Shirts & Pants",
     "Pashmina Shwal",
     "Accessories",

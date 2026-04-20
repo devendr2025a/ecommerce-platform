@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import {
   Instagram,
   Facebook,
-  Youtube,
-  Twitter,
+ 
+
   Mail,
   ShieldCheck,
   MapPin,
@@ -107,7 +107,7 @@ export default function Footer() {
 
             {/* Socials */}
             <div className="flex items-center gap-3 pt-1">
-              {[Instagram, Facebook, Youtube, Twitter].map((Icon, i) => (
+              {[Instagram, Facebook ].map((Icon, i) => (
                 <a
                   key={i}
                   href="#"

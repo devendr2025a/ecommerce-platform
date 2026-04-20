@@ -55,12 +55,12 @@ export default function ShopGallery() {
           {/* Header - Only title, no click togggle */}
           <div className="text-center mb-8">
             <h2 className="text-2xl font-black text-[var(--vg-black)] uppercase tracking-[0.08em] flex items-center justify-center gap-2">
-              <span></span> Our Shop Gallery
+              <span></span>  Gallery
             </h2>
             <p className="text-center text-[11px] text-[var(--vg-muted)] mt-2 uppercase tracking-wide">
-              Explore our workshop & fabrics
+              Explore our  fabrics
             </p>
-          </div>
+          </div> 
 
           {/* Gallery Slider - Always visible */}
           <div className="mt-4">
