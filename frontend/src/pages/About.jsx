@@ -25,27 +25,27 @@ const PILLARS = [
 const CATEGORIES = [
   {
     name: "Cotton Kurtas",
-    range: "₹1,800 – ₹2,800",
+    // range: "₹1,800 – ₹2,800",
     desc: "Breathable, daily & festive wear",
   },
   {
     name: "Chikankari Suits",
-    range: "₹2,500 – ₹4,500",
+    // range: "₹2,500 – ₹4,500",
     desc: "Hand-embroidered elegance",
   },
   {
     name: "Silk Sarees",
-    range: "₹3,500 – ₹5,500",
+    // range: "₹3,500 – ₹5,500",
     desc: "Premium festive & occasion wear",
   },
   {
     name: "Linen Shirts & Pants",
-    range: "₹2,000 – ₹3,800",
+    // range: "₹2,000 – ₹3,800",
     desc: "Smart ethnic-fusion wear",
   },
   {
     name: "Pashmina Stoles",
-    range: "₹2,800 – ₹5,000",
+    // range: "₹2,800 – ₹5,000",
     desc: "Soft, luxurious winter wear",
   },
 ];
@@ -180,7 +180,7 @@ export default function About() {
                     Description
                   </th>
                   <th className="text-left py-3 px-4 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)]">
-                    Price Range
+                    {/* Price Range */}
                   </th>
                 </tr>
               </thead>
