@@ -25,27 +25,22 @@ const PILLARS = [
 const CATEGORIES = [
   {
     name: "Cotton Kurtas",
-    // range: "₹1,800 – ₹2,800",
     desc: "Breathable, daily & festive wear",
   },
   {
     name: "Chikankari Suits",
-    // range: "₹2,500 – ₹4,500",
     desc: "Hand-embroidered elegance",
   },
   {
     name: "Silk Sarees",
-    // range: "₹3,500 – ₹5,500",
     desc: "Premium festive & occasion wear",
   },
   {
     name: "Linen Shirts & Pants",
-    // range: "₹2,000 – ₹3,800",
     desc: "Smart ethnic-fusion wear",
   },
   {
     name: "Pashmina Stoles",
-    // range: "₹2,800 – ₹5,000",
     desc: "Soft, luxurious winter wear",
   },
 ];
@@ -163,24 +158,21 @@ export default function About() {
         </div>
       </section>
 
-      {/* Category Table */}
+      {/* Category Table - INCREASED WIDTH WITH SPACE BETWEEN COLUMNS */}
       <section className="py-14 sm:py-20 px-4 bg-white border-b border-[var(--vg-border)]">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-black text-[var(--vg-black)] uppercase tracking-[0.08em] text-center mb-8">
             Our Collections
           </h2>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full mx-auto border-collapse">
               <thead>
                 <tr className="border-b-2 border-[var(--vg-black)]">
-                  <th className="text-left py-3 px-4 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)]">
+                  <th className="text-left py-3 pr-8 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)] w-2/5">
                     Category
                   </th>
-                  <th className="text-left py-3 px-4 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)]">
+                  <th className="text-left py-3 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)] w-3/5">
                     Description
-                  </th>
-                  <th className="text-left py-3 px-4 text-[11px] font-black uppercase tracking-[0.1em] text-[var(--vg-black)]">
-                    {/* Price Range */}
                   </th>
                 </tr>
               </thead>
@@ -190,14 +182,11 @@ export default function About() {
                     key={cat.name}
                     className={`border-b border-[var(--vg-border)] ${idx % 2 === 0 ? "bg-white" : "bg-[var(--vg-gray)]"} cursor-pointer hover:bg-[var(--vg-red)]/5 transition-colors duration-300 group`}
                   >
-                    <td className="py-3 px-4 text-sm font-bold text-[var(--vg-black)] group-hover:text-[var(--vg-red)] transition-colors">
+                    <td className="py-3 pr-8 text-sm font-bold text-[var(--vg-black)] group-hover:text-[var(--vg-red)] transition-colors whitespace-nowrap">
                       {cat.name}
                     </td>
-                    <td className="py-3 px-4 text-xs text-[var(--vg-muted)] group-hover:text-[var(--vg-black)] transition-colors">
+                    <td className="py-3 text-sm text-[var(--vg-muted)] group-hover:text-[var(--vg-black)] transition-colors">
                       {cat.desc}
-                    </td>
-                    <td className="py-3 px-4 text-sm font-bold text-[var(--vg-red)] group-hover:scale-105 transition-transform">
-                      {cat.range}
                     </td>
                   </tr>
                 ))}
