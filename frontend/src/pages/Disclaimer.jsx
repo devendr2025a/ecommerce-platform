@@ -5,7 +5,7 @@ const SECTIONS = [
   { id: 2, title: 'Product Use', content: 'Products sold on Avrotide are for general consumer use. Results and fit may vary. Any reliance on product descriptions is at your own discretion.' },
   { id: 3, title: 'Limitation of Liability', content: 'Avrotide shall not be held liable for any indirect, incidental, or consequential damages arising from the purchase or use of products from this website.' },
   { id: 4, title: 'External Links', content: 'Our website may contain links to third-party websites. We are not responsible for the content, accuracy, or practices of those external sites.' },
-  { id: 5, title: 'Contact', content: 'For disclaimer-related queries: support@avrotide.com | Avrotide Ventures, Gurugram, Haryana, India.' },
+  { id: 5, title: 'Contact', content: 'For disclaimer-related queries: support@avrotide.com | Avrotide Ventures, Hazratganj, Lucknow' },
 ];
 
 export default function Disclaimer() {
