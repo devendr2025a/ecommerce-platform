@@ -9,8 +9,8 @@ const SECTIONS = [
   { id: 6, title: 'User Responsibilities', content: 'You agree not to misuse the website, submit false information, engage in fraudulent activities, or attempt to access systems without authorization.' },
   { id: 7, title: 'Intellectual Property', content: 'All content on this website — including images, text, logos, and design — is owned by Avrotide and may not be reproduced without written permission.' },
   { id: 8, title: 'Limitation of Liability', content: 'Avrotide is not liable for indirect, incidental, or consequential damages arising from the use of our website or products to the fullest extent permitted by law.' },
-  { id: 9, title: 'Governing Law', content: 'These terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in Gurugram, Haryana.' },
-  { id: 10, title: 'Contact', content: 'For legal inquiries: support@avrotide.com | Avrotide Ventures, Gurugram, Haryana, India — 122001.' },
+  { id: 9, title: 'Governing Law', content: 'These terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in Lucknow' },
+  { id: 10, title: 'Contact', content: 'For legal inquiries: support@avrotide.com | Avrotide Ventures,A 32 Dilippur Tower, Hazratganj, Lucknow - 226001.' },
 ];
 
 export default function TermsAndConditions() {
