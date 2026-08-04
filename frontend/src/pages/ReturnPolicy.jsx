@@ -5,7 +5,7 @@ const SECTIONS = [
   { id: 2, title: 'Eligibility', content: 'Items must be unused, unwashed, and returned in original packaging with all tags, labels, and accessories intact.' },
   { id: 3, title: 'Return Process', content: 'Email support@avrotide.com with your order number and clear photographs of the product. Our team will initiate a pickup within 2 business days.' },
   { id: 4, title: 'Refund Method', content: 'Once the returned item passes our quality audit, refunds will be credited to the original payment method within 5–7 business days.' },
-  { id: 5, title: 'Contact', content: 'Email: support@avrotide.com | Avrotide Ventures, Gurugram, Haryana, India.' },
+  { id: 5, title: 'Contact', content: 'Email: support@avrotide.com | Avrotide Ventures,  Hazratganj, Lucknow' },
 ];
 
 export default function ReturnPolicy() {
