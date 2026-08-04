@@ -7,7 +7,7 @@ const SECTIONS = [
   { id: 4, title: 'Cookies', content: 'We use cookies to enhance your browsing experience, track site preferences, and analyze traffic. You may disable cookies via browser settings.' },
   { id: 5, title: 'Data Security', content: 'We implement industry-standard security measures including SSL encryption and secure server infrastructure to protect your personal information.' },
   { id: 6, title: 'Your Rights', content: 'You have the right to access, update, or request deletion of your personal data at any time by contacting us at support@avrotide.com.' },
-  { id: 7, title: 'Contact', content: 'For privacy-related concerns: support@avrotide.com | Avrotide Ventures, Gurugram, Haryana, India.' },
+  { id: 7, title: 'Contact', content: 'For privacy-related concerns: support@avrotide.com | Avrotide Ventures,  Hazratganj, Lucknow.' },
 ];
 
 export default function PrivacyPolicy() {
