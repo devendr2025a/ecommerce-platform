@@ -6,7 +6,7 @@ const SECTIONS = [
   { id: 3, title: 'Shipping Charges', content: 'Shipping fees are calculated at checkout based on weight and destination. Orders above ₹1999 qualify for free standard shipping.' },
   { id: 4, title: 'Delays', content: 'Occasional delays may occur due to courier constraints, extreme weather, or peak sale seasons. We will notify you in such cases.' },
   { id: 5, title: 'Order Tracking', content: 'Once dispatched, a tracking number will be sent to your registered email and phone number within 24 hours.' },
-  { id: 6, title: 'Contact', content: 'For shipping inquiries: support@avrotide.com | Avrotide Ventures, Gurugram, Haryana, India.' },
+  { id: 6, title: 'Contact', content: 'For shipping inquiries: support@avrotide.com | Avrotide Ventures,  Hazratganj, Lucknow' },
 ];
 
 export default function Shipping() {
