@@ -39,10 +39,20 @@ const createRazorpayOrder = async (req, res, next) => {
       key: process.env.RAZORPAY_KEY_ID,
     });
   } catch (error) {
-    if (error.message === 'Razorpay credentials not configured') {
-      return res.status(500).json({ success: false, message: error.message });
-    }
-    next(error);
+    const errorDesc =
+      error.error?.description ||
+      error.description ||
+      error.message ||
+      'Razorpay payment gateway unavailable';
+
+    console.error('Razorpay order creation failed:', errorDesc);
+
+    return res.status(400).json({
+      success: false,
+      message: `Online payment gateway is temporarily unavailable (${errorDesc}). Please select Cash on Delivery (COD) to place your order.`,
+      code: 'GATEWAY_ERROR',
+      details: errorDesc,
+    });
   }
 };
 

@@ -1,106 +1,134 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Heart } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-
-const API_URL =
-  import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
+import toast from "react-hot-toast";
+import { getBackendImageUrl } from "../../utils/imageUrl";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [adding, setAdding] = useState(false);
 
-  // ✅ Use finalPrice safely, fallback to price if undefined
   const finalPrice =
     product.finalPrice !== undefined && product.finalPrice !== null
       ? product.finalPrice
       : product.price;
 
-  const imageUrl = product.images?.[0]?.url
-    ? product.images[0].url.startsWith("http")
-      ? product.images[0].url
-      : `${API_URL}${product.images[0].url}`
-    : null;
+  const originalPrice =
+    product.originalPrice || product.price || finalPrice;
+
+  const discountPercent =
+    product.discount ||
+    (originalPrice > finalPrice
+      ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
+      : null);
+
+  const rawImageUrl =
+    product.image ||
+    product.images?.[0]?.url ||
+    "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80";
+
+  const imageUrl = getBackendImageUrl(rawImageUrl);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    addToCart(product._id);
+    e.stopPropagation();
+    setAdding(true);
+    addToCart(product);
+    toast.success(`Added ${product.name} to cart!`, {
+      icon: "🛒",
+      style: {
+        borderRadius: "8px",
+        background: "#008848",
+        color: "#fff",
+        fontSize: "13px",
+      },
+    });
+    setTimeout(() => setAdding(false), 400);
+  };
+
+  const toggleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsWishlisted(!isWishlisted);
   };
 
   return (
-    <Link
-      to={`/products/${product._id}`}
-      className="card-hover group flex flex-col"
-    >
-      {/* Image */}
-      <div className="relative aspect-square bg-[var(--vg-gray)] flex items-center justify-center overflow-hidden">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={product.name}
-            className="max-h-full max-w-full object-contain group-hover:scale-95 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-300">
-            <ShoppingCart className="h-10 w-10 stroke-[1]" />
-          </div>
-        )}
-
-        {/* Badges */}
-        {product.discount > 0 && (
-          <span className="absolute top-2 left-2 badge badge-red text-[9px]">
-            SALE –{product.discount}%
+    <div className="bg-white rounded-xl border border-gray-100 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all duration-200 p-2.5 sm:p-3 flex flex-col justify-between group relative">
+      {/* Top Discount Tag & Wishlist Heart */}
+      <div className="flex items-center justify-between z-10 mb-1">
+        {discountPercent ? (
+          <span className="text-[10px] font-extrabold text-[#15803d] bg-[#dcfce7] px-2 py-0.5 rounded-md">
+            {discountPercent}% OFF
           </span>
+        ) : (
+          <span />
         )}
 
-        {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-            <span className="badge badge-black px-3 py-1.5 text-[10px]">
-              Sold Out
-            </span>
-          </div>
-        )}
-
-        {/* Quick Add */}
         <button
-          onClick={handleAddToCart}
-          disabled={product.stock === 0}
-          className="absolute bottom-0 left-0 right-0 bg-[var(--vg-black)] text-white text-[10px]
-               font-bold uppercase tracking-[0.25em] py-2.5 opacity-0 group-hover:opacity-100
-               transition-opacity duration-200 disabled:hidden"
+          onClick={toggleWishlist}
+          aria-label="Add to wishlist"
+          className="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-red-500 transition-colors"
         >
-          Add to Cart
+          <Heart
+            className={`w-3.5 h-3.5 transition-transform active:scale-125 ${
+              isWishlisted ? "fill-red-500 text-red-500" : "stroke-[1.8]"
+            }`}
+          />
         </button>
       </div>
 
-      {/* Info */}
-      <div className="pt-3 pb-1 px-0">
-        <p className="text-[10px] text-[var(--vg-muted)] uppercase tracking-[0.2em] mb-1">
-          {product.category}
-        </p>
-        <h3 className="text-[12px] font-bold text-[var(--vg-black)] uppercase tracking-[0.12em] leading-snug line-clamp-2 group-hover:text-[var(--vg-red)] transition-colors">
-          {product.name}
-        </h3>
-        <div className="flex items-center gap-2 mt-1.5">
-          {/* Show original price only if discount exists */}
-          {product.discount > 0 && product.price && (
-            <span className="text-[11px] text-[var(--vg-muted)] line-through">
-              ₹{product.price.toLocaleString("en-IN")}
-            </span>
-          )}
-
-          <span className="text-[13px] font-bold text-[var(--vg-black)]">
-            ₹{finalPrice.toLocaleString("en-IN")}
-          </span>
+      {/* Product Image Link (Aspect-square, full-bleed compact cover) */}
+      <Link
+        to={`/products/${product._id || product.id}`}
+        className="block w-full group"
+      >
+        <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-50/70 flex items-center justify-center relative">
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300 block select-none"
+            loading="lazy"
+          />
         </div>
+
+        {/* Product Details (Compact typography) */}
+        <div className="w-full mt-2 text-left space-y-0.5">
+          <h4 className="text-xs sm:text-[13px] font-bold text-gray-900 group-hover:text-[#008848] transition-colors line-clamp-1 leading-snug">
+            {product.name}
+          </h4>
+          <p className="text-[11px] text-gray-500 font-medium truncate">
+            {product.unit || "1 unit"}
+          </p>
+
+          {/* Pricing Row */}
+          <div className="flex items-baseline gap-1.5 pt-0.5">
+            <span className="text-sm sm:text-base font-black text-gray-900">
+              ₹{finalPrice}
+            </span>
+            {originalPrice > finalPrice && (
+              <span className="text-[11px] text-gray-400 line-through">
+                ₹{originalPrice}
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+
+      {/* Add To Cart Button (Clean, compact, pill design) */}
+      <div className="pt-2">
+        <button
+          onClick={handleAddToCart}
+          disabled={product.stock === 0 || adding}
+          className="w-full bg-[#e8f5e9] text-[#008848] hover:bg-[#008848] hover:text-white font-extrabold text-xs py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 shadow-xs active:scale-95 disabled:opacity-50"
+        >
+          {adding ? "Adding..." : "Add to Cart"}
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }

@@ -134,4 +134,43 @@ const getMe = async (req, res) => {
   res.json({ success: true, user: req.user });
 };
 
-module.exports = { register, login, refreshToken, logout, getMe };
+// @desc    Google OAuth / One-Tap Login
+// @route   POST /api/auth/google
+// @access  Public
+const googleLogin = async (req, res, next) => {
+  try {
+    const { name, email, avatar } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Google email is required' });
+    }
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      const randomPassword = 'G_' + Math.random().toString(36).slice(-10) + '!9Aa';
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        password: randomPassword,
+        avatar: avatar || '',
+      });
+    }
+
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id);
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res.json({
+      success: true,
+      message: 'Google login successful',
+      user,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, refreshToken, logout, getMe, googleLogin };

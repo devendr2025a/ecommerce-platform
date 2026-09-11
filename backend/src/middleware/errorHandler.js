@@ -1,6 +1,10 @@
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
-  let message = err.message || 'Internal Server Error';
+  let message =
+    err.message ||
+    err.error?.description ||
+    err.description ||
+    (typeof err === 'string' ? err : 'Internal Server Error');
 
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {

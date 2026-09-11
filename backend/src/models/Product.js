@@ -25,6 +25,11 @@ const productSchema = new mongoose.Schema({
   ],
 
   category: { type: String, required: true },
+  categorySlug: { type: String },
+  unit: { type: String },
+  brand: { type: String },
+  packSize: { type: String },
+  isFeaturedDeal: { type: Boolean, default: false },
   salesCount: { type: Number, default: 0 },
   stock: { type: Number, required: true, min: 0, default: 0 },
 

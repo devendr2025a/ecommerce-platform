@@ -15,15 +15,31 @@
   import toast from "react-hot-toast";
 
   const API_URL =
-    import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
+    import.meta.env.VITE_BACKEND_URL ||
+    import.meta.env.VITE_API_URL?.replace("/api", "") ||
+    "http://localhost:5001";
 
   const CATEGORIES = [
-    "Silk Sarees",
-    "100% Cotton Kurtas",
-    "Chikankari Suits",
-    "Linen Shirts & Pants",
-    "Pashmina Shwal",
-    "Accessories",
+    "Dairy, Bread & Eggs",
+    "Fruits & Vegetables",
+    "Cold Drinks & Juices",
+    "Snacks & Munchies",
+    "Breakfast & Instant Food",
+    "Bakery & Biscuits",
+    "Tea, Coffee & Health Drinks",
+    "Atta, Rice & Dal",
+    "Masala, Oil & More",
+    "Sauces & Spreads",
+    "Chicken, Meat & Fish",
+    "Organic & Healthy Living",
+    "Baby Care",
+    "Pharma & Wellness",
+    "Cleaning Essentials",
+    "Personal Care",
+    "Pet Care",
+    "Paan Corner",
+    "Home & Office",
+    "Sweet Tooth",
   ];
 
   const EMPTY_FORM = {

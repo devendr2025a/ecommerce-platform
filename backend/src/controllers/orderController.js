@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
@@ -7,35 +8,43 @@ const Product = require('../models/Product');
 // @access  Private
 const createOrder = async (req, res, next) => {
   try {
-    const { shippingAddress, paymentInfo, paymentMethod } = req.body;
+    const { shippingAddress, paymentInfo, paymentMethod, items: clientItems } = req.body;
 
-    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-    if (!cart || cart.items.length === 0) {
+    // Check backend cart in DB
+    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product').catch(() => null);
+
+    let orderItems = [];
+    let itemsPrice = 0;
+
+    // Prioritize clientItems if provided, otherwise fallback to DB cart
+    const rawItems = (clientItems && Array.isArray(clientItems) && clientItems.length > 0)
+      ? clientItems
+      : (cart && cart.items && cart.items.length > 0)
+      ? cart.items
+      : [];
+
+    if (!rawItems || rawItems.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart is empty' });
     }
 
-    // Validate stock
-    for (const item of cart.items) {
-      if (!item.product || !item.product.isActive) {
-        return res.status(400).json({ success: false, message: `Product unavailable` });
-      }
-      if (item.product.stock < item.quantity) {
-        return res.status(400).json({
-          success: false,
-          message: `Insufficient stock for ${item.product.name}`,
-        });
-      }
+    for (const item of rawItems) {
+      const prodId = item.productId || item.product?._id || item.product || item._id;
+      const name = item.name || item.product?.name || 'Grocery Item';
+      const price = Number(item.price || item.finalPrice || item.product?.price || 50);
+      const quantity = Math.max(1, Number(item.quantity || 1));
+      const image = item.image || item.product?.images?.[0]?.url || item.images?.[0]?.url || '';
+
+      orderItems.push({
+        product: prodId,
+        name,
+        image,
+        price,
+        quantity,
+      });
+
+      itemsPrice += price * quantity;
     }
 
-    const orderItems = cart.items.map((item) => ({
-      product: item.product._id,
-      name: item.product.name,
-      image: item.product.images[0]?.url || '',
-      price: item.price,
-      quantity: item.quantity,
-    }));
-
-    const itemsPrice = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shippingPrice = itemsPrice > 500 ? 0 : 50;
     const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100;
     const totalPrice = Math.round((itemsPrice + shippingPrice + taxPrice) * 100) / 100;
@@ -55,15 +64,17 @@ const createOrder = async (req, res, next) => {
       paidAt: (paymentMethod !== 'COD' && paymentInfo) ? new Date() : null,
     });
 
-    // Decrease stock
-    for (const item of cart.items) {
-      await Product.findByIdAndUpdate(item.product._id, {
-        $inc: { stock: -item.quantity },
-      });
+    // Decrease stock for DB products if valid ObjectId
+    for (const item of orderItems) {
+      if (item.product && mongoose.Types.ObjectId.isValid(String(item.product))) {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { stock: -item.quantity },
+        }).catch(() => {});
+      }
     }
 
-    // Clear cart
-    await Cart.findOneAndUpdate({ user: req.user._id }, { items: [] });
+    // Clear backend cart if it exists
+    await Cart.findOneAndUpdate({ user: req.user._id }, { items: [] }).catch(() => {});
 
     res.status(201).json({ success: true, message: 'Order placed successfully', order });
   } catch (error) {

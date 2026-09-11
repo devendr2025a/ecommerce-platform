@@ -42,6 +42,15 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const loginWithGoogle = async (googleData) => {
+    const { data } = await authAPI.googleLogin(googleData);
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    setUser(data.user);
+    toast.success(`Signed in as ${data.user.name}!`);
+    return data;
+  };
+
   const logout = async () => {
     try { await authAPI.logout(); } catch {}
     localStorage.removeItem('accessToken');
@@ -53,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (updatedUser) => setUser(updatedUser);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, isAdmin: user?.role === 'admin' }}>
+    <AuthContext.Provider value={{ user, loading, login, register, loginWithGoogle, logout, updateUser, isAdmin: user?.role === 'admin' }}>
       {children}
     </AuthContext.Provider>
   );

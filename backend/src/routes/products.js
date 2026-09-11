@@ -9,11 +9,13 @@ const {
   deleteProduct,
   deleteProductImage,
   addReview,
+  getGroceryHomepage,
 } = require("../controllers/productController.js");
 
 const { protect, adminOnly } = require("../middleware/auth.js");
 const upload = require("../middleware/upload.js");
 
+router.get("/grocery/homepage", getGroceryHomepage);
 router.get("/", getProducts);
 router.get("/:id", getProduct);
 router.post("/:id/reviews", protect, addReview);

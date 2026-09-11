@@ -45,9 +45,12 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const path = require("path");
+
 // Static
-app.use("/public", express.static("public"));
-app.use("/uploads", express.static("uploads"));
+app.use("/public", express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "public", "images")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Logger
 if (process.env.NODE_ENV !== "production") {
