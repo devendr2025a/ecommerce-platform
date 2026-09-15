@@ -277,7 +277,7 @@ export default function Footer() {
 
       {/* ── 3. Bottom Bar (Dark Forest Green) ── */}
       <div className="bg-[#062a19] text-white py-8 border-t border-emerald-950">
-        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pr-16 sm:pr-20 md:pr-24 lg:pr-28">
           {/* Top Row: Logo, Download App, Socials */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10">
             {/* Grosliy Logo on Dark */}
@@ -336,8 +336,8 @@ export default function Footer() {
               </button>
             </div>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-2.5">
+            {/* Social Icons - Shifted left to stay clear of floating widget */}
+            <div className="flex items-center gap-2.5 mr-2 sm:mr-6 md:mr-10">
               {[
                 { icon: Facebook, href: "https://facebook.com", name: "Facebook" },
                 {
@@ -373,7 +373,7 @@ export default function Footer() {
           {/* Bottom Row: Copyright & Legal */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-gray-400">
             <p>© 2025 Grosliy. All rights reserved.</p>
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4 mr-2 sm:mr-6 md:mr-10">
               <Link to="/about" className="hover:text-white transition-colors">
                 About Us
               </Link>
