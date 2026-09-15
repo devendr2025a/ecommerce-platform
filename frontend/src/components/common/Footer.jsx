@@ -22,59 +22,65 @@ import GrosliyLogo from "./GrosliyLogo";
 import toast from "react-hot-toast";
 
 const USEFUL_LINKS = [
-  { label: "Blog", path: "/blog", icon: BookOpen },
-  { label: "Partner", path: "/partner", icon: Users },
-  { label: "Privacy", path: "/privacy", icon: Lock },
-  { label: "Franchise", path: "/franchise", icon: Store },
-  { label: "Terms", path: "/terms", icon: FileText },
-  { label: "Seller", path: "/seller", icon: Store },
-  { label: "FAQs", path: "/faq", icon: HelpCircle },
-  { label: "Warehouse", path: "/warehouse", icon: Warehouse },
-  { label: "Security", path: "/disclaimer", icon: Shield },
-  { label: "Deliver", path: "/deliver", icon: Bike },
-  { label: "Contact", path: "/contact", icon: Phone },
-  { label: "Resources", path: "/resources", icon: Layers },
+  { label: "About & Blog", path: "/blog", icon: BookOpen },
+  { label: "Partner With Us", path: "/partner", icon: Users },
+  { label: "Privacy Policy", path: "/privacy", icon: Lock },
+  { label: "Franchise Store", path: "/franchise", icon: Store },
+  { label: "Terms of Service", path: "/terms", icon: FileText },
+  { label: "Seller Onboarding", path: "/seller", icon: Store },
+  { label: "Customer FAQs", path: "/faq", icon: HelpCircle },
+  { label: "Warehouse Hub", path: "/warehouse", icon: Warehouse },
+  { label: "Security & Safety", path: "/disclaimer", icon: Shield },
+  { label: "Delivery Partner", path: "/deliver", icon: Bike },
+  { label: "Contact Support", path: "/contact", icon: Phone },
+  { label: "Help Center", path: "/faq", icon: Layers },
 ];
 
 const CATEGORY_COLUMNS = [
-  // Column 1
-  [
-    { name: "Bath & Body", url: "/products?search=Soap" },
-    { name: "Beauty & Cosmetics", url: "/products?category=personal-care" },
-    { name: "Health & Pharma", url: "/products?category=pharma-wellness" },
-    { name: "Atta, Rice & Dal", url: "/products?search=Atta" },
-    { name: "Bakery & Biscuits", url: "/products?category=bakery-cakes" },
-    { name: "Kitchenware & Appliances", url: "/products?category=household-essentials" },
-    { name: "Drinks & Juices", url: "/products?category=beverages" },
-    { name: "Sauces & Spreads", url: "/products?search=Sauce" },
-    { name: "Rakhi Gifts", url: "/products?category=bakery-cakes" },
-  ],
-  // Column 2
-  [
-    { name: "Hair", url: "/products?search=Shampoo" },
-    { name: "Feminine Hygiene", url: "/products?category=personal-care" },
-    { name: "Sexual Wellness", url: "/products?category=pharma-wellness" },
-    { name: "Oil, Ghee & Masala", url: "/products?search=Oil" },
-    { name: "Dry Fruits & Cereals", url: "/products?search=Almond" },
-    { name: "Chips & Namkeen", url: "/products?category=snacks-branded-foods" },
-    { name: "Tea, Coffee & Milk Drinks", url: "/products?category=beverages" },
-    { name: "Paan Corner", url: "/products?search=Paan" },
-    { name: "Cleaners & Repellents", url: "/products?category=household-essentials" },
-    { name: "Print Store", url: "/products?category=household-essentials" },
-  ],
-  // Column 3
-  [
-    { name: "Skin & Face", url: "/products?category=personal-care" },
-    { name: "Baby Care", url: "/products?category=baby-care" },
-    { name: "Vegetables & Fruits", url: "/products?category=fruits-vegetables" },
-    { name: "Dairy, Bread & Eggs", url: "/products?category=dairy-breakfast" },
-    { name: "Chicken, Meat & Fish", url: "/products?category=meat-seafood" },
-    { name: "Sweets & Chocolates", url: "/products?category=bakery-cakes" },
-    { name: "Instant Food", url: "/products?search=Instant" },
-    { name: "Ice Creams & More", url: "/products?category=dairy-breakfast" },
-    { name: "Electronics", url: "/products?category=household-essentials" },
-    { name: "E-Gift Cards", url: "/products?search=Gift" },
-  ],
+  {
+    title: "Daily Staples & Fresh",
+    items: [
+      { name: "Dairy, Milk & Eggs", url: "/products?category=dairy-breakfast" },
+      { name: "Fresh Fruits & Vegetables", url: "/products?category=fruits-vegetables" },
+      { name: "Atta, Rice & Dal", url: "/products?search=Atta" },
+      { name: "Masala, Oil & Ghee", url: "/products?search=Oil" },
+      { name: "Bakery, Bread & Buns", url: "/products?category=bakery-cakes" },
+    ],
+  },
+  {
+    title: "Snacks & Refreshments",
+    items: [
+      { name: "Cold Drinks & Juices", url: "/products?category=beverages" },
+      { name: "Snacks, Chips & Namkeen", url: "/products?category=snacks-branded-foods" },
+      { name: "Tea, Coffee & Drinks", url: "/products?search=Tea" },
+      { name: "Chocolates & Sweets", url: "/products?search=Chocolate" },
+      { name: "Instant Noodles & Pasta", url: "/products?search=Instant" },
+    ],
+  },
+  {
+    title: "Home & Personal Care",
+    items: [
+      { name: "Cleaning Essentials", url: "/products?category=household-essentials" },
+      { name: "Detergents & Laundry", url: "/products?search=Detergent" },
+      { name: "Personal Care & Soaps", url: "/products?category=personal-care" },
+      { name: "Baby Care Products", url: "/products?category=baby-care" },
+      { name: "Pharma & Wellness", url: "/products?category=pharma-wellness" },
+    ],
+  },
+];
+
+const POPULAR_SEARCHES = [
+  "Amul Milk",
+  "Aashirvaad Atta",
+  "Fortune Oil",
+  "Surf Excel",
+  "Harpic Cleaner",
+  "Dettol Soap",
+  "Maggi Noodles",
+  "Tata Tea",
+  "Basmati Rice",
+  "Dove Bar",
+  "Good Day Biscuits",
 ];
 
 export default function Footer() {
@@ -96,50 +102,50 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-white border-t border-gray-200 mt-12">
+    <footer className="w-full bg-white border-t border-gray-200 mt-10">
       {/* ── 1. Value Propositions Strip ── */}
-      <div className="py-6 sm:py-8 bg-white">
+      <div className="py-5 sm:py-6 bg-white">
         <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-white border border-gray-100 rounded-2xl sm:rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.04)] py-6 sm:py-7 px-2 sm:px-4 overflow-hidden">
+          <div className="relative bg-white border border-gray-100 rounded-2xl sm:rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] py-5 sm:py-6 px-2 sm:px-4 overflow-hidden">
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-100">
               {/* Feature 1 */}
-              <div className="flex flex-col items-center justify-center text-center p-4 sm:p-5 group relative">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_6px_16px_rgba(0,136,72,0.16)] transition-transform duration-300 group-hover:scale-105 relative z-10">
-                  <svg className="w-7 h-7 text-[#008848]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex flex-col items-center justify-center text-center p-3.5 sm:p-4 group relative">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,136,72,0.14)] transition-transform duration-300 group-hover:scale-105 relative z-10">
+                  <svg className="w-6 h-6 text-[#008848]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     <path d="m9 12 2 2 4-4" />
                   </svg>
                 </div>
-                <h4 className="mt-4 text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
+                <h4 className="mt-3 text-xs sm:text-sm font-extrabold text-gray-900 tracking-tight">
                   100% Original Products
                 </h4>
-                <div className="w-7 h-[2.5px] bg-[#008848] rounded-full my-2.5" />
-                <p className="text-xs sm:text-[13px] text-gray-500 font-medium">
-                  Genuine Brands
+                <div className="w-6 h-[2px] bg-[#008848] rounded-full my-2" />
+                <p className="text-[11px] sm:text-xs text-gray-500 font-medium">
+                  Direct from Verified Brands
                 </p>
               </div>
 
               {/* Feature 2 */}
-              <div className="flex flex-col items-center justify-center text-center p-4 sm:p-5 group relative">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_6px_16px_rgba(0,136,72,0.16)] transition-transform duration-300 group-hover:scale-105 relative z-10">
-                  <svg className="w-7 h-7 text-[#008848]" viewBox="0 0 28 24" fill="currentColor">
+              <div className="flex flex-col items-center justify-center text-center p-3.5 sm:p-4 group relative">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,136,72,0.14)] transition-transform duration-300 group-hover:scale-105 relative z-10">
+                  <svg className="w-6 h-6 text-[#008848]" viewBox="0 0 28 24" fill="currentColor">
                     <path d="M1 8h5a1 1 0 0 0 0-2H1a1 1 0 0 0 0 2zm2 5h4a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2zm-2 5h3a1 1 0 0 0 0-2H1a1 1 0 0 0 0 2z" />
                     <path d="M9 5h9a1 1 0 0 1 1 1v2h3.2a1.5 1.5 0 0 1 1.2.6l2.8 3.5a1.5 1.5 0 0 1 .3.9v3.5a1.5 1.5 0 0 1-1.5 1.5h-1.2a3 3 0 0 1-5.6 0h-3.6a3 3 0 0 1-5.6 0H9a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm3 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-.8-7.5h-3.2v2.5h4.6l-1.4-2.5z" />
                   </svg>
                 </div>
-                <h4 className="mt-4 text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
-                  Fast Delivery
+                <h4 className="mt-3 text-xs sm:text-sm font-extrabold text-gray-900 tracking-tight">
+                  Superfast Delivery
                 </h4>
-                <div className="w-7 h-[2.5px] bg-[#008848] rounded-full my-2.5" />
-                <p className="text-xs sm:text-[13px] text-gray-500 font-medium">
-                  In 10–30 Minutes
+                <div className="w-6 h-[2px] bg-[#008848] rounded-full my-2" />
+                <p className="text-[11px] sm:text-xs text-gray-500 font-medium">
+                  In 10–25 Minutes
                 </p>
               </div>
 
               {/* Feature 3 */}
-              <div className="flex flex-col items-center justify-center text-center p-4 sm:p-5 group relative">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_6px_16px_rgba(0,136,72,0.16)] transition-transform duration-300 group-hover:scale-105 relative z-10">
-                  <svg className="w-8 h-8 text-[#008848]" viewBox="0 0 28 26" fill="none">
+              <div className="flex flex-col items-center justify-center text-center p-3.5 sm:p-4 group relative">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,136,72,0.14)] transition-transform duration-300 group-hover:scale-105 relative z-10">
+                  <svg className="w-6 h-6 text-[#008848]" viewBox="0 0 28 26" fill="none">
                     <rect x="2" y="4" width="22" height="15" rx="3" stroke="currentColor" strokeWidth="2" />
                     <line x1="2" y1="9" x2="24" y2="9" stroke="currentColor" strokeWidth="2" />
                     <g transform="translate(14, 11)">
@@ -148,19 +154,19 @@ export default function Footer() {
                     </g>
                   </svg>
                 </div>
-                <h4 className="mt-4 text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
+                <h4 className="mt-3 text-xs sm:text-sm font-extrabold text-gray-900 tracking-tight">
                   Secure Payments
                 </h4>
-                <div className="w-7 h-[2.5px] bg-[#008848] rounded-full my-2.5" />
-                <p className="text-xs sm:text-[13px] text-gray-500 font-medium">
-                  Cash & Online UPI
+                <div className="w-6 h-[2px] bg-[#008848] rounded-full my-2" />
+                <p className="text-[11px] sm:text-xs text-gray-500 font-medium">
+                  UPI, Cards &amp; Cash on Delivery
                 </p>
               </div>
 
               {/* Feature 4 */}
-              <div className="flex flex-col items-center justify-center text-center p-4 sm:p-5 group relative">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_6px_16px_rgba(0,136,72,0.16)] transition-transform duration-300 group-hover:scale-105 relative z-10">
-                  <svg className="w-7 h-7 text-[#008848]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex flex-col items-center justify-center text-center p-3.5 sm:p-4 group relative">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#e8f8f0] ring-4 ring-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,136,72,0.14)] transition-transform duration-300 group-hover:scale-105 relative z-10">
+                  <svg className="w-6 h-6 text-[#008848]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 13.5v-3a9 9 0 0 1 18 0v3" />
                     <rect x="2" y="12" width="3" height="6" rx="1.5" fill="currentColor" />
                     <rect x="19" y="12" width="3" height="6" rx="1.5" fill="currentColor" />
@@ -169,12 +175,12 @@ export default function Footer() {
                     <text x="12" y="12.5" textAnchor="middle" fontSize="6.2" fontWeight="900" fill="currentColor" stroke="none" fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="-0.3">24/7</text>
                   </svg>
                 </div>
-                <h4 className="mt-4 text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
-                  24/7 Support
+                <h4 className="mt-3 text-xs sm:text-sm font-extrabold text-gray-900 tracking-tight">
+                  Dedicated Support
                 </h4>
-                <div className="w-7 h-[2.5px] bg-[#008848] rounded-full my-2.5" />
-                <p className="text-xs sm:text-[13px] text-gray-500 font-medium">
-                  We're here to help
+                <div className="w-6 h-[2px] bg-[#008848] rounded-full my-2" />
+                <p className="text-[11px] sm:text-xs text-gray-500 font-medium">
+                  Quick Resolution in Lucknow
                 </p>
               </div>
             </div>
@@ -182,58 +188,88 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── 2. Links Section ── */}
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 text-left">
+      {/* ── 2. Compact Links & Real Product Categories Section ── */}
+      <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 text-left">
           {/* Useful Links (4 cols on lg) */}
-          <div className="lg:col-span-4">
-            <h3 className="text-base font-extrabold text-gray-900 mb-4 tracking-tight">
-              Useful Links
+          <div className="lg:col-span-4 pr-0 sm:pr-4">
+            <h3 className="text-sm font-black text-gray-950 mb-3 tracking-tight flex items-center gap-2">
+              <span>Useful Links</span>
             </h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-gray-600">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-gray-600">
               {USEFUL_LINKS.map(({ label, path, icon: Icon }) => (
                 <Link
                   key={label}
                   to={path}
-                  className="flex items-center gap-2 hover:text-[#008848] transition-colors group"
+                  className="flex items-center gap-1.5 hover:text-[#008848] transition-colors py-0.5 group"
                 >
-                  <Icon className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#008848] transition-colors" />
-                  <span>{label}</span>
+                  <Icon className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#008848] transition-colors flex-shrink-0" />
+                  <span className="truncate group-hover:translate-x-0.5 transition-transform">{label}</span>
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Categories Columns (8 cols on lg) */}
-          <div className="lg:col-span-8">
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                Categories
-              </h3>
+          {/* Product Categories (8 cols on lg) */}
+          <div className="lg:col-span-8 pr-0 sm:pr-8 lg:pr-14">
+            <div className="flex items-center justify-between gap-2 mb-3 pb-1 border-b border-gray-100">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-black text-gray-950 tracking-tight">
+                  Grocery Categories
+                </h3>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
+                  Fresh Daily
+                </span>
+              </div>
               <Link
                 to="/products"
-                className="text-xs font-bold text-[#008848] hover:underline"
+                className="text-xs font-bold text-[#008848] hover:text-[#00703b] hover:underline flex items-center gap-1"
               >
-                see all
+                <span>View All Products</span>
+                <ChevronRight className="w-3 h-3" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-gray-600">
+            {/* 3 Compact Columns of Real Product Categories */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-xs text-gray-600">
               {CATEGORY_COLUMNS.map((col, cIdx) => (
-                <ul key={cIdx} className="space-y-2">
-                  {col.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        to={item.url}
-                        className="flex items-center gap-1.5 hover:text-[#008848] transition-colors group"
-                      >
-                        <ChevronRight className="w-3 h-3 text-gray-300 group-hover:text-[#008848] transition-colors" />
-                        <span>{item.name}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <div key={cIdx} className="space-y-1.5">
+                  <h4 className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">
+                    {col.title}
+                  </h4>
+                  <ul className="space-y-1.5">
+                    {col.items.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          to={item.url}
+                          className="flex items-center gap-1.5 hover:text-[#008848] transition-colors group py-0.5"
+                        >
+                          <ChevronRight className="w-3 h-3 text-gray-300 group-hover:text-[#008848] group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                          <span className="truncate">{item.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
+            </div>
+
+            {/* Popular Grocery Searches Strip */}
+            <div className="mt-5 pt-3 border-t border-gray-100">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-bold text-gray-500 flex-shrink-0">
+                  Popular Searches:
+                </span>
+                {POPULAR_SEARCHES.map((term) => (
+                  <Link
+                    key={term}
+                    to={`/products?search=${encodeURIComponent(term)}`}
+                    className="text-[11px] font-medium text-gray-600 hover:text-[#008848] bg-gray-50 hover:bg-emerald-50/80 border border-gray-200/70 hover:border-emerald-200 px-2 py-0.5 rounded-md transition-all shadow-2xs"
+                  >
+                    {term}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
