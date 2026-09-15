@@ -1,16 +1,54 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GrosliyLogo from '../components/common/GrosliyLogo';
 import GoogleAuthModal from '../components/common/GoogleAuthModal';
+import InputField from '../components/common/InputField';
 import toast from 'react-hot-toast';
+
+// Schema-driven field definitions following DRY principle
+const REGISTER_FIELDS = [
+  {
+    name: 'name',
+    label: 'Full Name',
+    type: 'text',
+    required: true,
+    placeholder: 'John Doe',
+    autoComplete: 'name',
+  },
+  {
+    name: 'email',
+    label: 'Email Address',
+    type: 'email',
+    required: true,
+    placeholder: 'name@example.com',
+    autoComplete: 'email',
+  },
+  {
+    name: 'phone',
+    label: 'Phone (Optional)',
+    type: 'tel',
+    required: false,
+    placeholder: '9876543210',
+    maxLength: 10,
+    inputClassName: 'font-mono',
+    autoComplete: 'tel',
+  },
+  {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    required: true,
+    placeholder: 'Min 6 characters',
+    autoComplete: 'new-password',
+  },
+];
 
 export default function Register() {
   const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
 
@@ -76,63 +114,16 @@ export default function Register() {
             </div>
           </div>
 
+          {/* Form rendered via DRY schema */}
           <form onSubmit={handleSubmit} className="space-y-2.5">
-            <div className="space-y-0.5">
-              <label className="text-[11px] font-semibold text-gray-700">Full Name</label>
-              <input
-                type="text"
-                required
-                placeholder="John Doe"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all"
+            {REGISTER_FIELDS.map((field) => (
+              <InputField
+                key={field.name}
+                {...field}
+                value={form[field.name]}
+                onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
               />
-            </div>
-
-            <div className="space-y-0.5">
-              <label className="text-[11px] font-semibold text-gray-700">Email Address</label>
-              <input
-                type="email"
-                required
-                placeholder="name@example.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all"
-              />
-            </div>
-
-            <div className="space-y-0.5">
-              <label className="text-[11px] font-semibold text-gray-700">Phone (Optional)</label>
-              <input
-                type="tel"
-                placeholder="9876543210"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all font-mono"
-                maxLength={10}
-              />
-            </div>
-
-            <div className="space-y-0.5">
-              <label className="text-[11px] font-semibold text-gray-700">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  placeholder="Min 6 characters"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg pl-3 pr-9 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors p-0.5"
-                >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            </div>
+            ))}
 
             <button
               type="submit"

@@ -8,6 +8,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import Loading from './components/common/Loading';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Pages
 import Home from './pages/Home';
@@ -93,10 +94,10 @@ const AppRoutes = () => (
     <Route path="/return" element={<AppLayout><ReturnPolicy /></AppLayout>} />
     <Route path="/disclaimer" element={<AppLayout><Disclaimer /></AppLayout>} />
     <Route path="/track-order" element={<AppLayout><TrackOrder /></AppLayout>} />
-    <Route path="/Wholesale" element={<AppLayout><Sale/></AppLayout>}/>
-    <Route path="/wholesale" element={<AppLayout><Sale/></AppLayout>}/>
-    <Route path="/offers" element={<AppLayout><Sale/></AppLayout>}/>
-    <Route path="/deals" element={<AppLayout><Sale/></AppLayout>}/>
+    <Route path="/Wholesale" element={<AppLayout><Sale /></AppLayout>} />
+    <Route path="/wholesale" element={<AppLayout><Sale /></AppLayout>} />
+    <Route path="/offers" element={<AppLayout><Sale /></AppLayout>} />
+    <Route path="/deals" element={<AppLayout><Sale /></AppLayout>} />
     <Route path="/cart" element={<AppLayout><Cart /></AppLayout>} />
     <Route path="/blog" element={<AppLayout><Blog /></AppLayout>} />
     <Route path="/partner" element={<AppLayout><PartnerProgram /></AppLayout>} />
@@ -128,6 +129,7 @@ export default function App() {
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
+          <ScrollToTop />
           <AppRoutes />
         </WishlistProvider>
       </CartProvider>

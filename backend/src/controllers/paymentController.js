@@ -3,13 +3,22 @@ const crypto = require('crypto');
 const Order = require('../models/Order');
 
 const getRazorpayInstance = () => {
-  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  let key_id = process.env.RAZORPAY_KEY_ID?.trim();
+  const key_secret = process.env.RAZORPAY_KEY_SECRET?.trim();
+
+  if (!key_id || !key_secret) {
     throw new Error('Razorpay credentials not configured');
   }
-  return new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
+
+  // Auto-correct if rzp_ prefix was accidentally omitted
+  if (!key_id.startsWith('rzp_test_') && !key_id.startsWith('rzp_live_')) {
+    key_id = `rzp_test_${key_id}`;
+  }
+
+  return {
+    razorpay: new Razorpay({ key_id, key_secret }),
+    key_id,
+  };
 };
 
 // @desc    Create Razorpay order
@@ -23,7 +32,7 @@ const createRazorpayOrder = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Invalid amount' });
     }
 
-    const razorpay = getRazorpayInstance();
+    const { razorpay, key_id } = getRazorpayInstance();
 
     const options = {
       amount: Math.round(amount * 100), // Convert to paise
@@ -36,7 +45,7 @@ const createRazorpayOrder = async (req, res, next) => {
     res.json({
       success: true,
       order,
-      key: process.env.RAZORPAY_KEY_ID,
+      key: key_id,
     });
   } catch (error) {
     const errorDesc =

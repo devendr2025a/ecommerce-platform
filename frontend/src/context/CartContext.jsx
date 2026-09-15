@@ -45,21 +45,26 @@ export const CartProvider = ({ children }) => {
 
     if (typeof productOrId === 'object' && productOrId !== null) {
       productObj = productOrId;
-      productId = productObj._id;
+      productId = String(productObj._id || productObj.id || '');
     } else {
-      productId = productOrId;
+      productId = String(productOrId || '');
       productObj = findProduct(productId);
     }
 
+    if (!productId) return;
+
     setItems((prevItems) => {
-      const existingIndex = prevItems.findIndex((item) => item.productId === productId);
+      const existingIndex = prevItems.findIndex((item) => String(item.productId) === productId);
       if (existingIndex > -1) {
         const updated = [...prevItems];
-        updated[existingIndex].quantity += quantity;
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + quantity,
+        };
         return updated;
       } else {
-        const price = productObj?.finalPrice ?? productObj?.price ?? 50;
-        const originalPrice = productObj?.price ?? price;
+        const price = Number(productObj?.finalPrice ?? productObj?.price ?? 50);
+        const originalPrice = Number(productObj?.originalPrice ?? productObj?.price ?? price);
         const newItem = {
           productId,
           _id: `cart_${productId}_${Date.now()}`,
@@ -88,25 +93,27 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = (productId, quantity) => {
+    const pId = String(productId);
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(pId);
       return;
     }
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
+        String(item.productId) === pId ? { ...item, quantity } : item
       )
     );
     if (user) {
-      cartAPI.update(productId, { quantity }).catch(() => {});
+      cartAPI.update(pId, { quantity }).catch(() => {});
     }
   };
 
   const removeFromCart = (productId) => {
-    setItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+    const pId = String(productId);
+    setItems((prevItems) => prevItems.filter((item) => String(item.productId) !== pId));
     toast.success('Item removed from cart', { icon: '🗑️' });
     if (user) {
-      cartAPI.remove(productId).catch(() => {});
+      cartAPI.remove(pId).catch(() => {});
     }
   };
 
@@ -129,6 +136,7 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider
       value={{
         cart,
+        items,
         cartLoading,
         cartCount,
         addToCart,

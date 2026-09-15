@@ -1,11 +1,31 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GrosliyLogo from '../components/common/GrosliyLogo';
+import GoogleAuthModal from '../components/common/GoogleAuthModal';
+import InputField from '../components/common/InputField';
 import toast from 'react-hot-toast';
 
-import GoogleAuthModal from '../components/common/GoogleAuthModal';
+// Schema-driven login fields following DRY principle
+const LOGIN_FIELDS = [
+  {
+    name: 'email',
+    label: 'Email Address',
+    type: 'email',
+    required: true,
+    placeholder: 'name@example.com',
+    autoComplete: 'email',
+  },
+  {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    required: true,
+    placeholder: '••••••••',
+    autoComplete: 'current-password',
+  },
+];
 
 export default function Login() {
   const { login, loginWithGoogle } = useAuth();
@@ -14,7 +34,6 @@ export default function Login() {
   const from = location.state?.from?.pathname || '/';
 
   const [form, setForm] = useState({ email: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
 
@@ -75,43 +94,16 @@ export default function Login() {
             </div>
           </div>
 
+          {/* Form rendered via DRY schema */}
           <form onSubmit={handleSubmit} className="space-y-2.5">
-            {/* Email Field */}
-            <div className="space-y-0.5">
-              <label className="text-[11px] font-semibold text-gray-700">Email Address</label>
-              <input
-                type="email"
-                required
-                placeholder="name@example.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all"
+            {LOGIN_FIELDS.map((field) => (
+              <InputField
+                key={field.name}
+                {...field}
+                value={form[field.name]}
+                onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
               />
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-0.5">
-              <div className="flex items-center justify-between">
-                <label className="text-[11px] font-semibold text-gray-700">Password</label>
-              </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  placeholder="••••••••"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full bg-[#f8fafc] border border-gray-200/80 rounded-lg pl-3 pr-9 py-1.5 text-xs text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-[#008848] focus:outline-none transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors p-0.5"
-                >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-            </div>
+            ))}
 
             {/* Submit Button */}
             <button

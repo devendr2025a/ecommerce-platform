@@ -1,28 +1,89 @@
-import React from 'react';
-
-const SECTIONS = [
-  { id: 1, title: 'General Information', content: 'All information on this website is provided in good faith for general informational purposes only. We do not guarantee its completeness, reliability, or accuracy.' },
-  { id: 2, title: 'Product Use', content: 'Products sold on Avrotide are for general consumer use. Results and fit may vary. Any reliance on product descriptions is at your own discretion.' },
-  { id: 3, title: 'Limitation of Liability', content: 'Avrotide shall not be held liable for any indirect, incidental, or consequential damages arising from the purchase or use of products from this website.' },
-  { id: 4, title: 'External Links', content: 'Our website may contain links to third-party websites. We are not responsible for the content, accuracy, or practices of those external sites.' },
-  { id: 5, title: 'Contact', content: 'For disclaimer-related queries: support@avrotide.com | Avrotide Ventures, Hazratganj, Lucknow' },
-];
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ChevronRight,
+  ShieldAlert,
+} from "lucide-react";
 
 export default function Disclaimer() {
+  const sections = [
+    {
+      id: "general",
+      title: "General Information & Catalog Accuracy",
+      content:
+        "All grocery information, including nutritional values, ingredient lists, and product descriptions on Grosliy are provided based on details supplied by brand manufacturers. While we verify information regularly, manufacturers may alter ingredient or packaging details without prior notice.",
+    },
+    {
+      id: "allergies",
+      title: "Allergies & Dietary Requirements",
+      content:
+        "Customers with specific food allergies, lactose intolerance, or dietary restrictions are strongly advised to inspect the physical product packaging and ingredient labels before consumption.",
+    },
+    {
+      id: "fresh-produce",
+      title: "Natural Produce Variations",
+      content:
+        "Fresh farm fruits and vegetables are natural products and may vary slightly in appearance, shape, and seasonal sweetness from the representative product imagery shown on the website.",
+    },
+    {
+      id: "liability",
+      title: "Limitation of Liability",
+      content:
+        "Grosliy Technologies shall not be held liable for any indirect or consequential damages resulting from product misuse, improper cold storage by the consumer, or unforeseen third-party distributor constraints.",
+    },
+    {
+      id: "contact",
+      title: "Queries & Support",
+      content:
+        "For any disclaimer or product inquiry, please contact our support team at support@grosliy.com | Hazratganj, Lucknow - 226001.",
+    },
+  ];
+
   return (
-    <div className="bg-white min-h-screen">
-      <div className="bg-[var(--vg-gray)] border-b border-[var(--vg-border)] py-12 sm:py-16 px-4">
-        <div className="max-w-3xl mx-auto">
-          <span className="text-[11px] font-bold text-[var(--vg-red)] uppercase tracking-[0.4em]">Legal Notice</span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[var(--vg-black)] uppercase tracking-[0.08em] mt-2 mb-4">Disclaimer</h1>
-          <div className="h-[3px] w-12 bg-[var(--vg-red)]" />
+    <div className="bg-[#fbfcfb] min-h-screen text-gray-800 pb-16">
+      <div className="bg-gradient-to-b from-[#eaf8f0] via-[#f2faf5] to-[#fbfcfb] border-b border-[#c8eed9]/60 pt-8 sm:pt-12 pb-10 sm:pb-14 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800/80 mb-4">
+            <Link to="/" className="hover:text-emerald-700 flex items-center gap-1 transition-colors">
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Home</span>
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-gray-500">Legal</span>
+            <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-emerald-700 font-bold">Disclaimer</span>
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 border border-emerald-300/60 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+            <ShieldAlert className="w-4 h-4 text-emerald-600" />
+            <span>Grosliy Legal Disclaimer</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+            Legal Disclaimer
+          </h1>
+
+          <p className="mt-3 text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
+            Important notices regarding product representations, dietary allergen considerations, and manufacturer packaging guidelines on Grosliy.
+          </p>
         </div>
       </div>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-4">
-        {SECTIONS.map((item) => (
-          <div key={item.id} className="bg-[var(--vg-gray)] border border-[var(--vg-border)] p-5 sm:p-6 hover:border-[var(--vg-black)] transition-colors">
-            <h3 className="text-[11px] font-black text-[var(--vg-black)] uppercase tracking-[0.25em] mb-2">{item.id}. {item.title}</h3>
-            <p className="text-[13px] text-[var(--vg-muted)] leading-relaxed">{item.content}</p>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-10 space-y-4">
+        {sections.map((sec, idx) => (
+          <div
+            key={sec.id}
+            className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-200/90 shadow-2xs hover:border-emerald-200 transition-all"
+          >
+            <h3 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-black flex items-center justify-center">
+                {idx + 1}
+              </span>
+              {sec.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">{sec.content}</p>
           </div>
         ))}
       </div>

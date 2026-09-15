@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { Heart, Plus, Minus } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { getBackendImageUrl } from "../../utils/imageUrl";
 
 export default function ProductCard({ product }) {
-  const { addToCart } = useCart();
+  const { cart, items: contextItems, addToCart, updateQuantity } = useCart();
+  const items = contextItems || cart?.items || [];
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [adding, setAdding] = useState(false);
+
+  const itemId = String(product._id || product.id || "");
+  const cartItem = items.find(
+    (item) => String(item.productId) === itemId || String(item._id) === itemId
+  );
+  const cartQty = cartItem?.quantity || 0;
 
   const finalPrice =
     product.finalPrice !== undefined && product.finalPrice !== null
@@ -119,15 +126,49 @@ export default function ProductCard({ product }) {
         </div>
       </Link>
 
-      {/* Add To Cart Button (Clean, compact, pill design) */}
+      {/* Add To Cart / Stepper Button */}
       <div className="pt-2">
-        <button
-          onClick={handleAddToCart}
-          disabled={product.stock === 0 || adding}
-          className="w-full bg-[#e8f5e9] text-[#008848] hover:bg-[#008848] hover:text-white font-extrabold text-xs py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 shadow-xs active:scale-95 disabled:opacity-50"
-        >
-          {adding ? "Adding..." : "Add to Cart"}
-        </button>
+        {cartQty > 0 ? (
+          <div className="w-full flex items-center justify-between bg-[#008848] text-white rounded-lg h-8 px-2 shadow-xs select-none">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateQuantity(itemId, cartQty - 1);
+              }}
+              className="w-7 h-full flex items-center justify-center hover:bg-black/15 active:scale-90 rounded transition-all cursor-pointer text-white font-black"
+              aria-label="Decrease quantity"
+              title="Decrease quantity"
+            >
+              <Minus className="w-3.5 h-3.5 stroke-[3]" />
+            </button>
+            <span className="text-xs font-black px-2 text-center">
+              {cartQty}
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateQuantity(itemId, cartQty + 1);
+              }}
+              className="w-7 h-full flex items-center justify-center hover:bg-black/15 active:scale-90 rounded transition-all cursor-pointer text-white font-black"
+              aria-label="Increase quantity"
+              title="Increase quantity"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[3]" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock === 0 || adding}
+            className="w-full bg-[#e8f5e9] text-[#008848] hover:bg-[#008848] hover:text-white font-extrabold text-xs py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 shadow-xs active:scale-95 disabled:opacity-50"
+          >
+            {adding ? "Adding..." : "Add to Cart"}
+          </button>
+        )}
       </div>
     </div>
   );

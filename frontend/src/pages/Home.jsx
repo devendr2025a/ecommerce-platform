@@ -3,7 +3,9 @@ import FarmFreshHero from "../components/common/FarmFreshHero";
 import PastelCategoryGrid from "../components/common/PastelCategoryGrid";
 import PromoSplitSection from "../components/common/PromoSplitSection";
 import BestSellingSection from "../components/common/BestSellingSection";
-import ShopByBrands from "../components/common/ShopByBrands";
+import QuickCommerceProductRow from "../components/common/QuickCommerceProductRow";
+import DepartmentExploreGrid from "../components/common/DepartmentExploreGrid";
+import { QUICK_COMMERCE_SECTIONS } from "../data/categoryCatalogData";
 import { productAPI } from "../services/api";
 
 export default function Home() {
@@ -42,10 +44,15 @@ export default function Home() {
         {/* ── 4. Best Selling Products Section ── */}
         <BestSellingSection products={homeData?.bestDeals?.products} />
 
-        {/* ── 5. Shop by Brands Section ── */}
-        <div className="pt-2 pb-4">
-          <ShopByBrands brandsSection={homeData?.brandsSection} />
+        {/* ── 5. Category-wise Quick Commerce Product Sections ── */}
+        <div className="space-y-4 sm:space-y-6 pt-2">
+          {QUICK_COMMERCE_SECTIONS.map((section) => (
+            <QuickCommerceProductRow key={section.id} section={section} />
+          ))}
         </div>
+
+        {/* ── 6. Department-wise Category Exploration Grid ── */}
+        <DepartmentExploreGrid />
       </div>
     </div>
   );

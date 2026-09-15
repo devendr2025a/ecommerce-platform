@@ -28,28 +28,10 @@ export default function FarmFreshHero() {
           <span className="text-2xl sm:text-3xl">🌿</span>
         </div>
 
-        {/* Handwritten Annotation on Right (Over Grocery Bag) */}
-        <div className="hidden lg:block absolute top-12 right-16 xl:right-28 pointer-events-none z-10 rotate-[-4deg]">
-          <div className="text-right">
-            <span className="font-serif italic text-lg xl:text-xl font-bold text-[#144829] drop-shadow-sm tracking-wide block">
-              Fresh From Farm
-            </span>
-            <span className="font-serif italic text-base xl:text-lg font-semibold text-[#144829] drop-shadow-sm tracking-wide block">
-              to Your Home ♡
-            </span>
-          </div>
-        </div>
 
         {/* Centered Max-Width Content Wrapper */}
         <div className="max-w-[1500px] mx-auto w-full px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="py-8 sm:py-12 max-w-xl">
-            {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200/80 mb-3 sm:mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#008848]" />
-              <span className="text-[10px] sm:text-[11px] font-extrabold tracking-widest text-[#008848] uppercase">
-                Fresh • Organic • Healthy
-              </span>
-            </div>
 
             {/* Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#113821] tracking-tight leading-[1.12]">

@@ -100,12 +100,7 @@ export default function Footer() {
       {/* ── 1. Value Propositions Strip ── */}
       <div className="py-6 sm:py-8 bg-white">
         <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-white border border-[#c8eed9] rounded-2xl sm:rounded-3xl shadow-[0_4px_24px_rgba(0,136,72,0.06)] py-6 sm:py-7 px-2 sm:px-4 overflow-hidden">
-            {/* ── Continuous Connected Flow Line (Dead center of the 4 icon circles) ── */}
-            <div className="hidden lg:block absolute top-[86px] -translate-y-1/2 left-[12%] right-[12%] h-[3px] bg-emerald-100 rounded-full z-0 overflow-hidden pointer-events-none">
-              <div className="w-1/3 h-full bg-gradient-to-r from-transparent via-[#008848] to-transparent rounded-full animate-line-flow shadow-[0_0_8px_#008848]" />
-            </div>
-
+          <div className="relative bg-white border border-gray-100 rounded-2xl sm:rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.04)] py-6 sm:py-7 px-2 sm:px-4 overflow-hidden">
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-100">
               {/* Feature 1 */}
               <div className="flex flex-col items-center justify-center text-center p-4 sm:p-5 group relative">

@@ -18,6 +18,8 @@ import {
   UserCheck,
   CreditCard,
   Sparkles,
+  Plus,
+  Minus,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -78,17 +80,17 @@ const BANK_OFFERS = [
   },
   {
     bank: "Paytm",
-    logoText: "Paytm",
+    logoText: "Paytm UPI",
     logoColor: "bg-[#00b9f5] text-white",
-    offer: "Flat ₹150 Cashback",
-    sub: "On min. spend ₹999",
+    offer: "Flat ₹50 Cashback",
+    sub: "On min. spend ₹499 via Paytm UPI",
   },
   {
     bank: "ICICI Bank",
-    logoText: "i ICICI Bank",
+    logoText: "iMobile Pay",
     logoColor: "bg-[#b02a30] text-white",
-    offer: "Up to ₹1,000 Cashback",
-    sub: "On selected cards",
+    offer: "5% Value Back",
+    sub: "Valid on all ICICI debit & credit cards",
   },
 ];
 
@@ -241,7 +243,8 @@ const ALL_DEAL_PRODUCTS = [
 ];
 
 export default function Sale() {
-  const { addToCart } = useCart();
+  const { addToCart, updateQuantity, items: contextItems, cart } = useCart();
+  const items = contextItems || cart?.items || [];
   const wishlistContext = useWishlist ? useWishlist() : null;
   const isWishlisted = wishlistContext?.isWishlisted || (() => false);
   const toggleWishlist = wishlistContext?.toggleWishlist || (() => {});
@@ -590,6 +593,11 @@ export default function Sale() {
         {/* 6 Column Products Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {displayedProducts.map((item) => {
+            const itemId = String(item._id || item.id || "");
+            const cartItem = items.find(
+              (ci) => String(ci.productId) === itemId || String(ci._id) === itemId
+            );
+            const cartQty = cartItem?.quantity || 0;
             const isWish = isWishlisted(item._id);
             const isAdding = addingId === item._id;
 
@@ -655,16 +663,50 @@ export default function Sale() {
                   </div>
                 </div>
 
-                {/* Add to Cart Full-width Button */}
+                {/* Add to Cart / Stepper Full-width Button */}
                 <div className="pt-2.5 mt-2">
-                  <button
-                    onClick={() => handleAdd(item)}
-                    disabled={isAdding}
-                    className="w-full bg-[#008848] hover:bg-[#00703b] active:scale-95 text-white font-extrabold text-[11px] py-2 rounded-lg shadow-2xs transition-all flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    <span>+</span>
-                    <span>{isAdding ? "Added!" : "Add to Cart"}</span>
-                  </button>
+                  {cartQty > 0 ? (
+                    <div className="w-full flex items-center justify-between bg-[#008848] text-white rounded-lg h-8 px-2 shadow-xs select-none">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          updateQuantity(itemId, cartQty - 1);
+                        }}
+                        className="w-7 h-full flex items-center justify-center hover:bg-black/15 active:scale-90 rounded transition-all cursor-pointer text-white font-black"
+                        aria-label="Decrease quantity"
+                        title="Decrease quantity"
+                      >
+                        <Minus className="w-3.5 h-3.5 stroke-[3]" />
+                      </button>
+                      <span className="text-xs font-black px-2 text-center">
+                        {cartQty}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          updateQuantity(itemId, cartQty + 1);
+                        }}
+                        className="w-7 h-full flex items-center justify-center hover:bg-black/15 active:scale-90 rounded transition-all cursor-pointer text-white font-black"
+                        aria-label="Increase quantity"
+                        title="Increase quantity"
+                      >
+                        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleAdd(item)}
+                      disabled={isAdding}
+                      className="w-full bg-[#008848] hover:bg-[#00703b] active:scale-95 text-white font-extrabold text-[11px] py-2 rounded-lg shadow-2xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <span>+</span>
+                      <span>{isAdding ? "Added!" : "Add to Cart"}</span>
+                    </button>
+                  )}
                 </div>
               </div>
             );
