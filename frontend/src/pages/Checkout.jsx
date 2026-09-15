@@ -29,7 +29,7 @@ export default function Checkout() {
   const { cart, clearCart } = useCart();
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("Online");
+  const [paymentMethod, setPaymentMethod] = useState("COD");
   const [loading, setLoading] = useState(true);
   const [placing, setPlacing] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
