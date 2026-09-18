@@ -305,67 +305,67 @@ export default function ProductDetail() {
               {/* Quantity Selector & Add to Cart Controls */}
               <div className="pt-1">
                 {inCartQty > 0 ? (
-                  /* Item Already in Cart State */
-                  <div className="flex items-center gap-2.5">
-                    <div className="inline-flex items-center border border-[#008848] rounded-lg bg-[#eaf8ef] p-0.5 flex-shrink-0 shadow-2xs">
+                  /* Item Already in Cart State - Compact & Premium */
+                  <div className="inline-flex items-center gap-2 flex-wrap">
+                    <div className="inline-flex items-center h-8 bg-[#f0fdf4] border border-[#008848]/30 rounded-lg p-0.5 shadow-2xs">
                       <button
                         type="button"
                         onClick={() => updateQuantity(product._id, inCartQty - 1)}
-                        className="w-8 h-8 rounded-md bg-white hover:bg-emerald-50 text-[#008848] flex items-center justify-center font-bold shadow-2xs transition-colors cursor-pointer"
+                        className="w-7 h-7 rounded-md bg-white hover:bg-emerald-50 text-[#008848] flex items-center justify-center font-bold border border-emerald-100/70 shadow-2xs transition-all active:scale-95 cursor-pointer"
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="w-3.5 h-3.5 stroke-[2.5]" />
+                        <Minus className="w-3 h-3 stroke-[2.5]" />
                       </button>
-                      <span className="w-9 text-center text-xs font-black text-[#008848]">
+                      <span className="px-2.5 text-[11px] font-extrabold text-[#008848] whitespace-nowrap">
                         {inCartQty} in cart
                       </span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(product._id, inCartQty + 1)}
-                        className="w-8 h-8 rounded-md bg-[#008848] hover:bg-[#00703b] text-white flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+                        className="w-7 h-7 rounded-md bg-[#008848] hover:bg-[#00703b] text-white flex items-center justify-center shadow-2xs transition-all active:scale-95 cursor-pointer"
                         aria-label="Increase quantity"
                       >
-                        <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                        <Plus className="w-3 h-3 stroke-[2.5]" />
                       </button>
                     </div>
 
                     <Link
                       to="/cart"
-                      className="flex-1 h-9 rounded-lg bg-gray-900 hover:bg-black text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                      className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-lg bg-gray-900 hover:bg-black text-white font-bold text-xs shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer"
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>View Cart & Checkout →</span>
                     </Link>
                   </div>
                 ) : (
-                  /* Standard Quantity & Add to Cart */
-                  <div className="flex items-center gap-2.5">
-                    <div className="inline-flex items-center border border-gray-200 rounded-lg bg-gray-50 p-0.5 flex-shrink-0 shadow-2xs">
+                  /* Standard Quantity & Add to Cart - Compact & Premium */
+                  <div className="inline-flex items-center gap-2 flex-wrap">
+                    <div className="inline-flex items-center h-8 border border-gray-200 rounded-lg bg-gray-50 p-0.5 shadow-2xs">
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-8 h-8 rounded-md bg-white hover:bg-gray-100 text-gray-700 flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+                        className="w-7 h-7 rounded-md bg-white hover:bg-gray-100 text-gray-700 flex items-center justify-center shadow-2xs transition-all active:scale-95 cursor-pointer"
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="w-3.5 h-3.5" />
+                        <Minus className="w-3 h-3 stroke-[2.5]" />
                       </button>
-                      <span className="w-7 text-center text-xs font-black text-gray-950">
+                      <span className="w-6 text-center text-xs font-black text-gray-950">
                         {quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => q + 1)}
-                        className="w-8 h-8 rounded-md bg-white hover:bg-gray-100 text-gray-700 flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+                        className="w-7 h-7 rounded-md bg-white hover:bg-gray-100 text-gray-700 flex items-center justify-center shadow-2xs transition-all active:scale-95 cursor-pointer"
                         aria-label="Increase quantity"
                       >
-                        <Plus className="w-3.5 h-3.5" />
+                        <Plus className="w-3 h-3 stroke-[2.5]" />
                       </button>
                     </div>
 
                     <button
                       type="button"
                       onClick={handleAddToCart}
-                      className={`flex-1 h-9 px-4 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs active:scale-[0.98] transition-all duration-150 cursor-pointer ${
+                      className={`h-8 px-4 rounded-lg font-bold text-xs inline-flex items-center justify-center gap-1.5 shadow-2xs hover:shadow-xs active:scale-95 transition-all cursor-pointer ${
                         isAdding
                           ? "bg-[#15803d] text-white"
                           : "bg-[#008848] hover:bg-[#00703b] text-white"

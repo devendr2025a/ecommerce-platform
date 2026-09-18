@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, X, Filter } from "lucide-react";
+import { Search, X, Filter, Check } from "lucide-react";
 import { GROSLIY_CATEGORIES } from "../../data/groceryData";
 
 const PACK_SIZES = ["100g", "250g", "500g", "1kg", "750ml", "1L"];
@@ -59,21 +59,56 @@ export default function ProductFilter({ filters, onChange, onReset }) {
         </div>
       </div>
 
-      {/* Grocery Category */}
+      {/* Grocery Category - All categories displayed in text format */}
       <div className="space-y-2">
-        <label className="text-xs font-bold text-gray-700">Grocery Category</label>
-        <select
-          value={filters.category || ""}
-          onChange={(e) => handleChange("category", e.target.value)}
-          className="w-full bg-[#f8fafc] border border-gray-200 rounded-lg px-3 py-2 text-xs focus:bg-white focus:border-[#008848] focus:outline-none transition-all font-medium"
-        >
-          <option value="">All Categories</option>
-          {GROSLIY_CATEGORIES.map((c) => (
-            <option key={c.slug} value={c.slug}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold text-gray-700">Grocery Category</label>
+          {filters.category && (
+            <button
+              type="button"
+              onClick={() => handleChange("category", "")}
+              className="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer"
+            >
+              Reset
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-1 max-h-64 overflow-y-auto pr-1 border border-gray-100 rounded-xl p-1.5 bg-[#f8fafc]">
+          {/* All Categories Option */}
+          <button
+            type="button"
+            onClick={() => handleChange("category", "")}
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left cursor-pointer ${
+              !filters.category
+                ? "bg-[#008848] text-white font-bold shadow-2xs"
+                : "text-gray-700 hover:bg-emerald-50 hover:text-[#008848] font-medium"
+            }`}
+          >
+            <span className="font-semibold">All Categories</span>
+            {!filters.category && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+          </button>
+
+          {/* Individual Categories in Pure Text */}
+          {GROSLIY_CATEGORIES.filter((c) => c.id !== "more").map((c) => {
+            const isSelected = filters.category === c.slug;
+            return (
+              <button
+                key={c.slug}
+                type="button"
+                onClick={() => handleChange("category", isSelected ? "" : c.slug)}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left cursor-pointer ${
+                  isSelected
+                    ? "bg-[#008848] text-white font-bold shadow-2xs"
+                    : "text-gray-700 hover:bg-emerald-50 hover:text-[#008848] font-medium"
+                }`}
+              >
+                <span className="truncate">{c.name}</span>
+                {isSelected && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Quick Price Ranges */}
